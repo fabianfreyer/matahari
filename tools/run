@@ -1,0 +1,14 @@
+#!/bin/sh
+if [ $# -eq 0 ]; then # check for empty argument list
+  echo "USAGE: $0 <command> <options>."
+  echo "The following commands are available:"
+  for script in `dirname $0`/`uname`/*; do
+    echo "\t`basename $script | sed 's/.sh//g'` `$script -u`"
+  done
+else
+  program=`dirname $0`/`uname`/$1.sh
+  echo Running $1.
+  shift
+  $program $@
+  echo Done.
+fi
