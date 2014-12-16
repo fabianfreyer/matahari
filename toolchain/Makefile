@@ -8,4 +8,7 @@ all:$(BUILD_DIR)
 clean:clean-target
 	rm build.log
 
+menuconfig:
+	$(CT_NG) $@ 
+
 include ${SYS}.mk
