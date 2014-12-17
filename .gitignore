@@ -2,10 +2,15 @@
 floppy.dmg
 .DS_STORE
 
+#ct-ng
+crosstool-ng-*.tar.bz
+crosstool-ng-*
+
 #toolchain
 toolchain/.config.2
 toolchain/build.log
 toolchain/target/
+toolchain/toolchain.sparseimage
 tools/bin/
 tools/crosstool-ng-*.tar.*
 tools/crosstool-ng-*/
