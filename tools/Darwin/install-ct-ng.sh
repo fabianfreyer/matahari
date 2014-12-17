@@ -34,7 +34,6 @@ while [ "$1" != "" ]; do
 done
 
 BASE_DIR=$(python -c 'import os,sys;print os.path.realpath(sys.argv[1])' $(dirname $0)/../)
-echo $BASE_DIR
 mkdir -p $BASE_DIR
 
 echo "Retrieving ct-ng..."
@@ -73,6 +72,30 @@ index c9e690e..21e79e4 100644
  struct kconf_id;
 
  static struct kconf_id *kconf_id_lookup(register const char *str, register unsigned int len);
+PATCH
+
+patch -p1 << PATCH
+diff -du crosstool-ng-1.12.0/Makefile.in host-crosstool-ng-1.12.0/Makefile.in
+--- crosstool-ng-1.12.0/Makefile.in     2011-08-01 01:21:34.000000000 +0200
++++ host-crosstool-ng-1.12.0/Makefile.in        2011-08-07 21:39:16.055958219 +0200
+@@ -101,9 +101,14 @@
+ # level.
+ # This has the side effect of only showing the real targets, and hiding our
+ # internal ones. :-)
+-ifneq (\$(MAKELEVEL),0)
+-\$(error Recursion detected, bailing out...)
+-endif
++#
++# NB: For buildroot, this has no importance:
++# - crosstool-NG should never ever be called manually
++# - thus auto-completion would never ever be attempted
++# - so we shouldn't have to detect it
++#ifneq (\$(MAKELEVEL),0)
++#\$(error Recursion detected, bailing out...)
++#endif
+ 
+ MAKEFLAGS += \$(CT_MAKEFLAGS)
+ build install clean distclean uninstall:
 PATCH
 
 echo "Building..."
