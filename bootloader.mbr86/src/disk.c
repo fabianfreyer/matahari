@@ -1,3 +1,4 @@
+#include <stage1.h>
 #include <disk.h>
 #include <partition_table.h>
 extern mbr_t mbr;
@@ -8,7 +9,8 @@ char get_bios_drive() {
   return bios_drive;
 }
 
-/* int __attribute__((noinline)) get_drive_geom(
+#ifdef GET_DRIVE_GEOM
+int __attribute__((noinline)) get_drive_geom(
     drive_geom *g, unsigned char drive) {
   unsigned short tmp1, tmp2;
   unsigned short failed=0;
@@ -26,7 +28,8 @@ char get_bios_drive() {
   g->spt = tmp1 & 0x3F;
   g->heads = tmp2 >> 8;
   return failed;
-}*/
+}
+#endif
 
 void __attribute__((noinline)) chs_read(
   const void *buffer, unsigned char c, unsigned char h, unsigned char s,
@@ -43,7 +46,9 @@ void __attribute__((noinline)) chs_read(
     : "cc", "memory" 
   );
 }
-/*void __attribute__((noinline)) lba_read(
+
+#ifdef LBA_READ
+void __attribute__((noinline)) lba_read(
   const void *buffer, unsigned int lba, unsigned char blocks,
   drive_geom *g, unsigned char drive) {
   unsigned char c, h, s;
@@ -55,6 +60,7 @@ void __attribute__((noinline)) chs_read(
     :
     :"a"(0x0200), "c"((c<<8)|s), "d"((h<<8) | drive), "D"(0), "b"(buffer) 
   );
-}*/
+}
+#endif
 
 
