@@ -1,3 +1,4 @@
+#include <common.h>
 #include <stage1.h>
 #include <code16.h>
 #include <io.h>
@@ -26,10 +27,14 @@ void setup_gdt() {
 #endif
 
 void __attribute__((noreturn)) main(){
-  unsigned char drv = get_bios_drive();
+  unsigned char boot_drive = get_bios_drive();
+
   #ifdef PRINT
-  putc('0'+drv-0x80);
-  puts("...\r\n");
+  puts("booting from ");
+  if (0x80 & boot_drive) puts("hd");
+  else puts("fd");
+  putc('0'+boot_drive-0x80);
+  puts("\r\n");
   #endif
 
   #ifdef GET_DRIVE_GEOM
@@ -37,21 +42,24 @@ void __attribute__((noreturn)) main(){
   get_drive_geom(&g, drv);
   #endif
 
+  // Load Stage2
   #ifdef CHS_READ
-  static void (*stage2)() = (void (*)()) 0x1000;
-  chs_read((void*) stage2, 0,0,1,1, drv);
-  #endif
-
+  static void (*stage2)() = (void (*)()) = STAGE2_BASE;
   #ifdef PRINT
-  putc('X');
-  puts("\n\rread block\n\r");
-  int i;
-  for(i=0; i<=block[0]; i++) {putc('0');}
-  puts("\n\rread block\n\r");
+  puts("Stage 2 loading, please wait...\r\n");
   #endif
-
-  #ifdef SETUP_GDT
-  setup gdt();
+  chs_read(
+    (void*) stage2,
+    STAGE2_CYLINDER,
+    STAGE2_HEAD,
+    STAGE2_SECTOR,
+    STAGE2_LENGTH,
+    boot_drive);
+  stage2();
+  /* This point should never be reached */
+  #ifdef PRINT
+  puts("FAILED.\r\n");
+  #endif
   #endif
 
   while(1) {

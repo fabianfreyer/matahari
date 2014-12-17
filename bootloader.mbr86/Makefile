@@ -26,8 +26,8 @@ clean:
 	$(call toolchain,$(OBJCOPY)) -O binary $< $@
 
 build32/stage1.elf: build32/stage1.o build32/io.o build32/partition_table.o build32/disk.o
-	$(call toolchain,$(LD)) -melf_i386 -static -Tlinker.ld -nostdlib --nmagic -o $@ $^
-	$(call toolchain,$(LD)) -melf_i386 -static -Tdebug.ld -nostdlib --nmagic -o $@.debug	$^
+	$(call toolchain,$(LD)) -melf_i386 -static -Tstage1.ld -nostdlib --nmagic -o $@ $^
+	$(call toolchain,$(LD)) -melf_i386 -static -Tstage1.dbg.ld -nostdlib --nmagic -o $@.debug	$^
 
 build32/%.o: src/%.c
 	$(call toolchain,$(CC)) -c -g -Os -m32 -march=i686 -ffreestanding -fno-pic -ffast-math -fomit-frame-pointer -Wall -Werror -Iinclude -o $@ $<

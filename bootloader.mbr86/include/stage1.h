@@ -16,3 +16,4 @@
 #endif
 
 #define CHS_READ
+#define PRINT
