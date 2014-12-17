@@ -1,6 +1,8 @@
+#include <stage1.h>
 #include <code16.h>
 #include <io.h>
 
+#ifdef PRINT
 void __attribute__((noinline)) __attribute__((regparm(3))) puts(const char *s){
   while (*s){
     /* Interrupt 0x10: Teletype output
@@ -17,7 +19,9 @@ void __attribute__((noinline)) __attribute__((regparm(3))) puts(const char *s){
 void putc(const char c){
     __asm__ __volatile__ ("int $0x10" :: "a" (0x0E00 | c), "b" (7));
 }
+#endif
 
+#ifdef READ
 char getc() {
   char c;
   /* Interrupt 0x16: Keyboard interrupt
@@ -32,3 +36,4 @@ char getc() {
       );
   return c;
 }
+#endif

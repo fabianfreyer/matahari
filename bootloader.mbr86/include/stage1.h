@@ -9,4 +9,10 @@
 
 /** Add support for reading LBA data */
 #define LBA_READ
+
+/** Add input/output code */
+#define PRINT
+#define READ
 #endif
+
+#define CHS_READ

@@ -1,4 +1,5 @@
 #include <stage1.h>
+#include <code16.h>
 #include <disk.h>
 #include <partition_table.h>
 extern mbr_t mbr;
@@ -31,21 +32,21 @@ int __attribute__((noinline)) get_drive_geom(
 }
 #endif
 
-void __attribute__((noinline)) chs_read(
-  const void *buffer, unsigned char c, unsigned char h, unsigned char s,
-  unsigned char blocks, unsigned char drive){
-  /*
-   * we cannot clobber ebx, so need to push and pop it
-   */
-  __asm__ __volatile__(
-    "movb $0x02, %%ah\n"
-    "int $0x13\n"
-    :
-    :"al"(blocks), "b"(buffer),
-    "ch"(c), "cl"(s), "dh"(h<<8), "dl"(drive)
-    : "cc", "memory" 
+#ifdef CHS_READ
+unsigned char __attribute__((noinline)) chs_read(const void *buffer, unsigned char cylinder, unsigned char head, unsigned short sector, unsigned char blocks, unsigned char drive) {
+  asm volatile(
+  "int $0x13"
+    : 
+    : "a"(0x200|blocks),
+      "b"(buffer),
+      "c"((cylinder&0xFF)<<8|(cylinder&0x300)>>2|(sector&0x3F)),
+      "d"((unsigned short) head<<8|drive)
+    : "cc","memory"
   );
+  /* unsigned short status=i(a>>8); */
+  return 0; //(unsigned char) (a&0xFF);
 }
+#endif
 
 #ifdef LBA_READ
 void __attribute__((noinline)) lba_read(

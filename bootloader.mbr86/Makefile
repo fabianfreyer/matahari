@@ -31,5 +31,3 @@ build32/stage1.elf: build32/stage1.o build32/io.o build32/partition_table.o buil
 
 build32/%.o: src/%.c
 	$(call toolchain,$(CC)) -c -g -Os -m32 -march=i686 -ffreestanding -fno-pic -ffast-math -fomit-frame-pointer -Wall -Werror -Iinclude -o $@ $<
-	echo size of $@ is `wc -c $@` \n
-	

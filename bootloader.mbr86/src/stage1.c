@@ -27,21 +27,28 @@ void setup_gdt() {
 
 void __attribute__((noreturn)) main(){
   unsigned char drv = get_bios_drive();
+  #ifdef PRINT
   putc('0'+drv-0x80);
   puts("...\r\n");
+  #endif
 
   #ifdef GET_DRIVE_GEOM
   drive_geom g;
   get_drive_geom(&g, drv);
   #endif
 
-  char block[512];
-  chs_read((const void*) &block, 0,0,1,1, drv);
+  #ifdef CHS_READ
+  static void (*stage2)() = (void (*)()) 0x1000;
+  chs_read((void*) stage2, 0,0,1,1, drv);
+  #endif
+
+  #ifdef PRINT
   putc('X');
   puts("\n\rread block\n\r");
   int i;
   for(i=0; i<=block[0]; i++) {putc('0');}
   puts("\n\rread block\n\r");
+  #endif
 
   #ifdef SETUP_GDT
   setup gdt();
