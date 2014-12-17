@@ -18,6 +18,28 @@ export TOOLCHAIN=$(TOP_DIR)toolchain/target/$(TOOLCHAIN_TUPLE)
 toolchain_=$(TOOLCHAIN)/bin/$(TOOLCHAIN_TUPLE)-$(1)
 export toolchain=$(value toolchain_)
 
-.PHONY: bootloader.mbr86
-bootloader.mbr86:
+.PHONY: bootloader bootloader.mbr86 bootloader.mbr86-debug
+bootloader: bootloader.mbr86
+
+bootloader.mbr86: toolchain
 	$(MAKE) -C bootloader.mbr86
+
+bootloader.mbr86-debug:
+	$(MAKE) -C bootloader.mbr86 debug
+
+
+.PHONY: toolchain
+toolchain: $(CT_NG) $(call toolchain_,gcc)
+$(call toolchain_,gcc):
+	$(MAKE) -C toolchain
+
+$(CT_NG):
+	tools/run install-ct-ng
+
+.PHONY: clean
+clean:
+	rm crosstool-ng-*.tar.bz2
+	rm -r crosstool-ng-*/
+	rm -r tools/bin tools/lib
+	$(MAKE) -C toolchain clean
+	$(MAKE) -C bootloader.mbr86 clean

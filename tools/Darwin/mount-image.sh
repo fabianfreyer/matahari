@@ -8,7 +8,7 @@ function options() {
 }
 
 #Default parameters
-FILENAME=floppy 
+FILENAME=image
 MOUNTPOINT=./mnt
 DEVICE_FILE=""
 FS=msdos
@@ -40,7 +40,7 @@ while [ "$1" != "" ]; do
   esac
   shift
 done
-if [ "$DEVICE_FILE" -eq "" ]; then
+if [ ! $DEVICE_FILE ]; then
   DEVICE_FILE=$FILENAME.device
 fi
 
@@ -53,5 +53,5 @@ elif [ "`ls -A $DIR`" ]; then
   exit 126 
 fi
 
-hdid -nomount $FILENAME.dmg > $DEVICE_FILE
+hdid -nomount $FILENAME.img > $DEVICE_FILE
 mount -t $FS `cat $DEVICE_FILE` $MOUNTPOINT

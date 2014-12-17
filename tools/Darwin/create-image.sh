@@ -4,13 +4,14 @@ function usage() {
 }
 
 function options() {
-  echo "[-h|--help][-u|--options][--sectors=2880][--fs=MS-DOS][<image = \"floppy\">]"
+  echo "[-h|--help][-u|--options][--sectors=2880][--fs=FAT12][-L|--label=foobar][<image = \"floppy\">]"
 }
 
 #Default parameters
 SECTORS=2880
-FILENAME=floppy 
-FS=MS-DOS
+FILENAME=floppy
+FS="MS-DOS FAT12"
+LABEL="FOOBAR"
 
 while [ "$1" != "" ]; do
   PARAM=`echo $1 | awk -F= '{print $1}'`
@@ -30,6 +31,9 @@ while [ "$1" != "" ]; do
     --fs)
       FS=$VALUE
       ;;
+    -L|--label)
+      LABEL=$VALUE
+      ;;
     *)
       FILENAME=$PARAM
       ;;
@@ -37,4 +41,7 @@ while [ "$1" != "" ]; do
   shift
 done
 
-echo hdiutil create -fs $FS -sectors $SECTORS -layout NONE -ov $FILENAME
+dd if=/dev/zero of=$FILENAME count=$SECTORS bs=512
+DEVICE=`hdid -nomount $FILENAME`
+diskutil eraseVolume "$FS" $LABEL $DEVICE
+hdiutil detach $DEVICE
