@@ -44,7 +44,7 @@ void __attribute__((noreturn)) main(){
 
   // Load Stage2
   #ifdef CHS_READ
-  static void (*stage2)() = (void (*)()) = STAGE2_BASE;
+  static void (*stage2)() = (void (*)()) STAGE2_BASE;
   #ifdef PRINT
   puts("Stage 2 loading, please wait...\r\n");
   #endif
