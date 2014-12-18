@@ -1,33 +1,56 @@
-QEMU=qemu-system-i386
+ARCH=i386
+QEMU=qemu-system-$(ARCH)
 
 DEBUGGER=nemiver
 DEBUGGER_OPTIONS=--remote=localhost:1234
 
-all: build32/stage1.bin section-headers
+OUTPUT=build32
 
-section-headers: build32/stage1.elf
+LDFLAGS= -melf_$(ARCH) -static -nostdlib -nmagic
+CFLAGS=-g -Os -m32 -march=i686 -ffreestanding -fno-pic -ffast-math -fomit-frame-pointer -Wall -Werror -Iinclude -DARCH_$(ARCH)
+
+COMPONENTS=mbr stage2
+
+#MBR configuration
+mbr_MODULES=entry disk io partition_table
+mbr_SECTIONS=.text_mbr .data_mbr .partition_table .sig
+
+#Stage2 configuration
+stage2_MODULES=entry
+stage2_SECTIONS=.text_stage2 .data_stage2
+
+.PHONY: all
+all: $(foreach component,$(COMPONENTS),$(OUTPUT)/$(component).bin) section-headers
+
+.PHONY: section-headers
+section-headers: $(OUTPUT)/loader.elf
 	$(call toolchain,$(OBJDUMP)) -h $^
 
-test: build32/stage1.bin
+.PHONY: test
+test: $(OUTPUT)/mbr.bin
 	$(QEMU) $^
 
-qemu.pid: build32/stage1.bin
+qemu.pid: $(OUTPUT)/mbr.bin
 	$(QEMU) -monitor stdio -s -S $^ & echo $$! > $@
 
-debug: qemu.pid build32/stage1.elf.debug
+.PHONY: qemu.pid
+debug: qemu.pid $(OUTPUT)/loader.elf
 	$(DEBUGGER) $(DEBUGGER_OPTIONS) $(word 2,$^)
 	kill `cat $<` 
 	rm $<
 
+.PHONY: clean
 clean:
-	rm build32/*
+	rm $(OUTPUT)/*
+
+$(OUTPUT)/%.bin: $(OUTPUT)/loader.elf
+	$(call toolchain,$(OBJCOPY)) -O binary $(foreach section,$($*_SECTIONS),-j $(section)) $< $@
 
 %.bin : %.elf
 	$(call toolchain,$(OBJCOPY)) -O binary $< $@
 
-build32/stage1.elf: build32/stage1.o build32/io.o build32/partition_table.o build32/disk.o
-	$(call toolchain,$(LD)) -melf_i386 -static -Tstage1.ld -nostdlib --nmagic -o $@ $^
-	$(call toolchain,$(LD)) -melf_i386 -static -Tstage1.dbg.ld -nostdlib --nmagic -o $@.debug	$^
+$(OUTPUT)/loader.elf: loader.ld $(foreach component, $(COMPONENTS),$(foreach mod,$($(component)_MODULES),$(OUTPUT)/$(mod).$(component).o))
+	$(call toolchain,$(LD)) -T$(filter %.ld,$^) $(LDFLAGS) -o $@ $(filter %.o,$^)
 
-build32/%.o: src/%.c
-	$(call toolchain,$(CC)) -c -g -Os -m32 -march=i686 -ffreestanding -fno-pic -ffast-math -fomit-frame-pointer -Wall -Werror -Iinclude -o $@ $<
+$(OUTPUT)/%.o: src/%.c
+	$(call toolchain,$(CC)) $(CFLAGS) -c -o $@ $<

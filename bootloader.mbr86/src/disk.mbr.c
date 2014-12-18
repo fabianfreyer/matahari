@@ -36,7 +36,7 @@ int __attribute__((noinline)) get_drive_geom(
 unsigned char __attribute__((noinline)) chs_read(const void *buffer, unsigned char cylinder, unsigned char head, unsigned short sector, unsigned char blocks, unsigned char drive) {
   asm volatile(
   "int $0x13"
-    : 
+    :
     : "a"(0x200|blocks),
       "b"(buffer),
       "c"((cylinder&0xFF)<<8|(cylinder&0x300)>>2|(sector&0x3F)),
@@ -59,7 +59,7 @@ void __attribute__((noinline)) lba_read(
   asm volatile(
     "int $0x13\n"
     :
-    :"a"(0x0200), "c"((c<<8)|s), "d"((h<<8) | drive), "D"(0), "b"(buffer) 
+    :"a"(0x0200), "c"((c<<8)|s), "d"((h<<8) | drive), "D"(0), "b"(buffer)
   );
 }
 #endif
