@@ -1,5 +1,4 @@
-#ifndef PARTITION_TABLE_H
-#define PARTITION_TABLE_H
+#pragma once
 
 #define ACTIVE 0x80
 #define INACTIVE 0x00
@@ -38,5 +37,3 @@ typedef struct __attribute__((packed)) {
 } mbr_t;
 
 #define partition_table __attribute__(( section(".partition_table") ))
-
-#endif

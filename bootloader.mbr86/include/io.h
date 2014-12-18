@@ -1,6 +1,4 @@
-#ifndef __IO_H
-#define __IO_H
-
+#pragma once
 #include <code16.h>
 
 /**
@@ -23,5 +21,3 @@ void __attribute__((noinline)) putc(const char c);
  * \return      character pressed
  */
 char __attribute__((noinline)) getc();
-
-#endif
