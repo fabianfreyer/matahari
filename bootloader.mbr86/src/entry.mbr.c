@@ -8,6 +8,8 @@
 #include <mbr/disk.h>
 #include <partition_table.h>
 
+extern void stage2_entry(unsigned char drive);
+
 #ifdef ARCH_x86
 __asm__ ("jmpl  $0, $main\n");
 #endif
@@ -50,7 +52,8 @@ void __attribute__((noreturn)) main(){
 
   // Load Stage2
   #ifdef MBR_CHS_READ
-  static void (*stage2)() = (void (*)()) STAGE2_BASE;
+  void (*stage2)() = (void (*)()) STAGE2_BASE;
+
   #ifdef MBR_PRINT
   puts("Stage 2 loading, please wait...\r\n");
   #endif
@@ -61,7 +64,7 @@ void __attribute__((noreturn)) main(){
     STAGE2_SECTOR,
     STAGE2_LENGTH,
     boot_drive);
-  stage2();
+  stage2_entry(boot_drive);
   /* This point should never be reached */
   #ifdef MBR_PRINT
   puts("FAILED.\r\n");

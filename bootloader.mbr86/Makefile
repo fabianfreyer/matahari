@@ -43,6 +43,9 @@ debug: qemu.pid $(OUTPUT)/loader.elf
 clean:
 	rm $(OUTPUT)/*
 
+build32/image.bin: build32/mbr.bin build32/stage2.bin
+	cat build32/mbr.bin build32/stage2.bin > $@
+
 $(OUTPUT)/%.bin: $(OUTPUT)/loader.elf
 	$(call toolchain,$(OBJCOPY)) -O binary $(foreach section,$($*_SECTIONS),-j $(section)) $< $@
 
