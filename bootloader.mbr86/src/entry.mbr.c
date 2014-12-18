@@ -1,17 +1,18 @@
-#include <common.h>
-#include <stage1.h>
-#include <code16.h>
 #include <arch.h>
-#include <io.h>
+#include <code16.h>
+
+#include <common.h>
+
+#include <mbr/features.h>
+#include <mbr/io.h>
+#include <mbr/disk.h>
 #include <partition_table.h>
-#include <gdt.h>
-#include <disk.h>
 
 #ifdef ARCH_x86
 __asm__ ("jmpl  $0, $main\n");
 #endif
 
-#ifdef SETUP_GDT
+#ifdef MBR_SETUP_GDT
 void setup_gdt() {
   static gdt_entry_t gdt_entries[3];
    gdt_entries[0] = GDT_ENTRY_NULL;
@@ -42,15 +43,15 @@ void __attribute__((noreturn)) main(){
   puts("\r\n");
   #endif
 
-  #ifdef GET_DRIVE_GEOM
+  #ifdef MBR_GET_DRIVE_GEOM
   drive_geom g;
   get_drive_geom(&g, drv);
   #endif
 
   // Load Stage2
-  #ifdef CHS_READ
+  #ifdef MBR_CHS_READ
   static void (*stage2)() = (void (*)()) STAGE2_BASE;
-  #ifdef PRINT
+  #ifdef MBR_PRINT
   puts("Stage 2 loading, please wait...\r\n");
   #endif
   chs_read(
@@ -62,7 +63,7 @@ void __attribute__((noreturn)) main(){
     boot_drive);
   stage2();
   /* This point should never be reached */
-  #ifdef PRINT
+  #ifdef MBR_PRINT
   puts("FAILED.\r\n");
   #endif
   #endif

@@ -1,9 +1,10 @@
-#include <stage1.h>
 #include <arch.h>
 #include <code16.h>
-#include <io.h>
 
-#ifdef PRINT
+#include <mbr/features.h>
+#include <mbr/io.h>
+
+#ifdef MBR_PRINT
 void __attribute__((noinline)) __attribute__((regparm(3))) puts(const char *s){
 #ifdef ARCH_x86
   while (*s){
@@ -30,7 +31,7 @@ void putc(const char c){
 }
 #endif
 
-#ifdef READ
+#ifdef MBR_READ
 char getc() {
 #ifdef ARCH_x86
   char c;

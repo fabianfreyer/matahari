@@ -1,7 +1,8 @@
-#include <stage1.h>
 #include <arch.h>
 #include <code16.h>
-#include <disk.h>
+
+#include <mbr/features.h>
+#include <mbr/disk.h>
 #include <partition_table.h>
 extern mbr_t mbr;
 
@@ -11,7 +12,7 @@ char get_bios_drive() {
   return bios_drive;
 }
 
-#ifdef GET_DRIVE_GEOM
+#ifdef MBR_GET_DRIVE_GEOM
 int __attribute__((noinline)) get_drive_geom(
     drive_geom *g, unsigned char drive) {
 unsigned short failed=0;
@@ -37,7 +38,7 @@ unsigned short failed=0;
 }
 #endif
 
-#ifdef CHS_READ
+#ifdef MBR_CHS_READ
 unsigned char __attribute__((noinline)) chs_read(const void *buffer, unsigned char cylinder, unsigned char head, unsigned short sector, unsigned char blocks, unsigned char drive) {
 #ifdef ARCH_x86
   asm volatile(
@@ -57,7 +58,7 @@ unsigned char __attribute__((noinline)) chs_read(const void *buffer, unsigned ch
 }
 #endif
 
-#ifdef LBA_READ
+#ifdef MBR_LBA_READ
 void __attribute__((noinline)) lba_read(
   const void *buffer, unsigned int lba, unsigned char blocks,
   drive_geom *g, unsigned char drive) {

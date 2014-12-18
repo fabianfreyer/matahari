@@ -1,19 +1,19 @@
 #pragma once
-
+// Feature declaration
 #if 0
 /** Add support for loading geometry */
-#define GEOM_READ
+#define MBR_GEOM_READ
 
 /** Add support for getting drive geometry */
-#define GET_DRIVE_GEOM
+#define MBR_GET_DRIVE_GEOM
 
 /** Add support for reading LBA data */
-#define LBA_READ
+#define MBRLBA_READ
 
 /** Add input/output code */
-#define PRINT
-#define READ
+#define MBR_PRINT
+#define MBR_READ
 #endif
 
-#define CHS_READ
-#define PRINT
+#define MBR_CHS_READ
+#define MBR_PRINT
