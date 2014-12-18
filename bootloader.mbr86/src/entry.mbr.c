@@ -1,12 +1,15 @@
 #include <common.h>
 #include <stage1.h>
 #include <code16.h>
+#include <arch.h>
 #include <io.h>
 #include <partition_table.h>
 #include <gdt.h>
 #include <disk.h>
 
+#ifdef ARCH_x86
 __asm__ ("jmpl  $0, $main\n");
+#endif
 
 #ifdef SETUP_GDT
 void setup_gdt() {
@@ -22,7 +25,9 @@ void setup_gdt() {
     .limit = 3*8 - 1,
     .pointer = (void*) gdt_entries,
   };
+#ifdef ARCH_x86
   asm volatile("lgdt %0" : : "m" (gdtp));
+#endif
 }
 #endif
 
