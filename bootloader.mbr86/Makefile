@@ -59,5 +59,16 @@ $(OUTPUT)/%.bin: $(OUTPUT)/loader.elf
 $(OUTPUT)/loader.elf: loader.ld $(foreach component, $(COMPONENTS),$(foreach mod,$($(component)_MODULES),$(OUTPUT)/$(mod).$(component).o))
 	$(call toolchain,$(LD)) -T$(filter %.ld,$^) $(LDFLAGS) -o $@ $(filter %.o,$^)
 
+.PHONY: depend
+depend: $(OUTPUT)/loader.elf.depend
+
+$(OUTPUT)/loader.elf.depend: $(foreach component, $(COMPONENTS),$(foreach mod,$($(component)_MODULES),$(OUTPUT)/$(mod).$(component).depend))
+	cat $^ > $@
+
+include $(OUTPUT)/loader.elf.depend
+
 $(OUTPUT)/%.o: src/%.c
 	$(call toolchain,$(CC)) $(CFLAGS) -c -o $@ $<
+
+$(OUTPUT)/%.depend: src/%.c
+	$(call toolchain,$(CC)) $(CFLAGS) -MM -MT $(OUTPUT)/$*.o -MF $@ $^
