@@ -1,8 +1,12 @@
 ARCH=i386
 QEMU=qemu-system-$(ARCH)
 
-DEBUGGER=nemiver
-DEBUGGER_OPTIONS=--remote=localhost:1234
+# Debugging
+GDB=$(call toolchain,gdb)
+GDB_OPTIONS=-ex "target remote localhost:1234" -ex "set architecture i8086" -ex "break main" -ex "set step-mode on"
+
+NEMIVER=nemiver
+NEMIVER_OPTIONS=--remote=localhost:1234
 
 OUTPUT=build32
 
@@ -30,12 +34,12 @@ section-headers: $(OUTPUT)/loader.elf
 test: $(OUTPUT)/mbr.bin
 	$(QEMU) $^
 
-qemu.pid: $(OUTPUT)/mbr.bin
+qemu.pid: build32/image.bin
 	$(QEMU) -monitor stdio -s -S $^ & echo $$! > $@
 
 .PHONY: qemu.pid
 debug: qemu.pid $(OUTPUT)/loader.elf
-	$(DEBUGGER) $(DEBUGGER_OPTIONS) $(word 2,$^)
+	$($(DEBUGGER)) $($(DEBUGGER)_OPTIONS) $(word 2,$^)
 	kill `cat $<` 
 	rm $<
 
