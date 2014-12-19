@@ -35,7 +35,7 @@ test: $(OUTPUT)/mbr.bin
 	$(QEMU) $^
 
 qemu.pid: build32/image.bin
-	$(QEMU) -monitor stdio -s -S $^ & echo $$! > $@
+	$(QEMU) -monitor stdio -s -S -d int,cpu_reset $^ & echo $$! > $@
 
 .PHONY: qemu.pid
 debug: qemu.pid $(OUTPUT)/loader.elf
