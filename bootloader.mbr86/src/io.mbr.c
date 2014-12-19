@@ -5,7 +5,7 @@
 #include <mbr/io.h>
 
 #ifdef MBR_PRINT
-void __attribute__((noinline)) __attribute__((regparm(3))) puts(const char *s){
+void __attribute__((noinline)) __attribute__((regparm(3))) puts16(const char *s){
 #ifdef ARCH_x86
   while (*s){
     /* Interrupt 0x10: Teletype output
@@ -22,7 +22,7 @@ void __attribute__((noinline)) __attribute__((regparm(3))) puts(const char *s){
 #endif
 }
 
-void putc(const char c){
+void putc16(const char c){
 #ifdef ARCH_x86
   asm volatile ("int $0x10" :: "a" (0x0E00 | c), "b" (7));
 #else
@@ -32,7 +32,7 @@ void putc(const char c){
 #endif
 
 #ifdef MBR_READ
-char getc() {
+char getc16() {
 #ifdef ARCH_x86
   char c;
   /* Interrupt 0x16: Keyboard interrupt

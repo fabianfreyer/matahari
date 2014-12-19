@@ -19,11 +19,11 @@ void __attribute__((noreturn)) main(){
   unsigned char boot_drive = get_bios_drive();
 
   #ifdef PRINT
-  puts("booting from ");
-  if (0x80 & boot_drive) puts("hd");
-  else puts("fd");
-  putc('0'+boot_drive-0x80);
-  puts("\r\n");
+  puts16("booting from ");
+  if (0x80 & boot_drive) puts16("hd");
+  else puts16("fd");
+  putc16('0'+boot_drive-0x80);
+  puts16("\r\n");
   #endif
 
   #ifdef MBR_GET_DRIVE_GEOM
@@ -36,7 +36,7 @@ void __attribute__((noreturn)) main(){
   void (*stage2)() = (void (*)()) STAGE2_BASE;
 
   #ifdef MBR_PRINT
-  puts("Stage 2 loading, please wait...\r\n");
+  puts16("Stage 2 loading, please wait...\r\n");
   #endif
   chs_read(
     (void*) stage2,
@@ -48,7 +48,7 @@ void __attribute__((noreturn)) main(){
   stage2_entry(boot_drive);
   /* This point should never be reached */
   #ifdef MBR_PRINT
-  puts("FAILED.\r\n");
+  puts16("FAILED.\r\n");
   #endif
   #endif
 

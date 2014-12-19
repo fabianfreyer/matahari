@@ -13,25 +13,25 @@ void setup_global_gdt();
 void dumpb(unsigned char byte) {
   unsigned char hi_nybble = byte >> 4;
   unsigned char lo_nybble = byte & 0xF;
-  putc((hi_nybble)+(hi_nybble<0xA?'0':'a'-0xA));
-  putc((lo_nybble)+(lo_nybble<0xA?'0':'a'-0xA));
+  putc16((hi_nybble)+(hi_nybble<0xA?'0':'a'-0xA));
+  putc16((lo_nybble)+(lo_nybble<0xA?'0':'a'-0xA));
 }
 void dump(void * addr, unsigned int count) {
   unsigned char* byte = addr;
   int i;
   for(i=0; i<count; i++) {
     dumpb(byte[i]);
-    if (! (i+1) % 16) puts("\n\r");
-    else if (! (i+1) % 8) puts("  ");
-    else putc(' ');
+    if (! (i+1) % 16) puts16("\n\r");
+    else if (! (i+1) % 8) puts16("  ");
+    else putc16(' ');
   }
-  puts("\n\r");
+  puts16("\n\r");
 }
 #endif
 
 void stage2_entry(unsigned char boot_drive) {
-  puts("in stage2\n\r");
-  puts("loading gdt...\n\r");
+  puts16("in stage2\n\r");
+  puts16("loading gdt...\n\r");
 
   /*
    * Disable all interrupts before loading GDT
@@ -39,8 +39,8 @@ void stage2_entry(unsigned char boot_drive) {
   disable_interrupts();
   disable_nmi();
   setup_global_gdt();
-  puts("done\n\r");
-  puts("entering protected mode...\n\r");
+  puts16("done\n\r");
+  puts16("entering protected mode...\n\r");
 
   /*
    * Switch to protected mode
@@ -69,11 +69,11 @@ void setup_global_gdt() {
     SEG_PRIV(0)     | SEG_DATA_RDWR);
 
   #ifdef DEBUG
-  puts("null entry: ");
+  puts16("null entry: ");
   dump(&gdt_entries[0], sizeof(gdt_entry_t));
-  puts("code entry: ");
+  puts16("code entry: ");
   dump(&gdt_entries[1], sizeof(gdt_entry_t));
-  puts("data entry: ");
+  puts16("data entry: ");
   dump(&gdt_entries[2], sizeof(gdt_entry_t));
   gdt_load(gdt_entries, 3);
   #endif
