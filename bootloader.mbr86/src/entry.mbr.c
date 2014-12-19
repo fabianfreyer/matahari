@@ -14,25 +14,6 @@ extern void stage2_entry(unsigned char drive);
 __asm__ ("jmpl  $0, $main\n");
 #endif
 
-#ifdef MBR_SETUP_GDT
-void setup_gdt() {
-  static gdt_entry_t gdt_entries[3];
-   gdt_entries[0] = GDT_ENTRY_NULL;
-   gdt_entries[1] = GDT_ENTRY(0,0xFFFFFFFF,gdt_granularity_4k,gdt_segment_32,
-      1,gdt_kernel_mode,gdt_descriptor_code,gdt_executable_code,0,
-      gdt_segment_rx,0);
-   gdt_entries[2] = GDT_ENTRY(0,0xFFFFFFFF,gdt_granularity_4k,gdt_segment_32,
-      1,gdt_kernel_mode,gdt_descriptor_data,gdt_executable_data,0,
-      gdt_segment_rw,0);
-  struct {unsigned int limit:16 ;void* pointer;} __attribute__((packed)) gdtp={
-    .limit = 3*8 - 1,
-    .pointer = (void*) gdt_entries,
-  };
-#ifdef ARCH_x86
-  asm volatile("lgdt %0" : : "m" (gdtp));
-#endif
-}
-#endif
 
 void __attribute__((noreturn)) main(){
   unsigned char boot_drive = get_bios_drive();
@@ -71,6 +52,5 @@ void __attribute__((noreturn)) main(){
   #endif
   #endif
 
-  while(1) {
-  }
+  YOU_SHALL_NOT_PASS;
 }

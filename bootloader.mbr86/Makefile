@@ -20,11 +20,11 @@ mbr_MODULES=entry disk io partition_table
 mbr_SECTIONS=.text_mbr .data_mbr .partition_table .sig
 
 #Stage2 configuration
-stage2_MODULES=entry
+stage2_MODULES=entry gdt pmode
 stage2_SECTIONS=.text_stage2 .data_stage2
 
 .PHONY: all
-all: $(foreach component,$(COMPONENTS),$(OUTPUT)/$(component).bin) section-headers
+all: build32/image.bin section-headers
 
 .PHONY: section-headers
 section-headers: $(OUTPUT)/loader.elf
@@ -47,7 +47,7 @@ debug: qemu.pid $(OUTPUT)/loader.elf
 clean:
 	rm $(OUTPUT)/*
 
-build32/image.bin: build32/mbr.bin build32/stage2.bin
+build32/image.bin: $(foreach component,$(COMPONENTS),$(OUTPUT)/$(component).bin)
 	cat build32/mbr.bin build32/stage2.bin > $@
 
 $(OUTPUT)/%.bin: $(OUTPUT)/loader.elf

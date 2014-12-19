@@ -1,4 +1,8 @@
 #pragma once
+/**
+ * Include this file in every c file that contains code running on real mode.
+ */
+
 #include <arch.h>
 
 /**
@@ -8,3 +12,6 @@
 #ifdef ARCH_x86
 asm (".code16gcc\n");
 #endif
+
+#define REAL_MODE
+#define CODE16

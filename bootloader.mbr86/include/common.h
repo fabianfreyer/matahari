@@ -1,4 +1,7 @@
 #pragma once
+
+#define DEBUG
+
 /**
  * Stage1 Data
  */
@@ -27,6 +30,11 @@
 /**
  * Length of Stage2 in sectors
  */
-#define STAGE2_LENGTH 1
+#define STAGE2_LENGTH 2
 
 /**@}*/
+
+#define _define_wrap(x) do { x } while(0)
+
+#define BOCHS_BREAK _define_wrap(asm volatile ("xchgw %bx, %bx");)
+#define YOU_SHALL_NOT_PASS _define_wrap(while(1) {}; )
