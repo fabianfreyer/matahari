@@ -1,13 +1,14 @@
 #pragma once
 
 void stage2_pmode();
+
 #ifdef REAL_MODE
 /*
  * Probably not the nicest way to do things, but hey, let's put this into a
  * header file. I mean, it's static, anyways.
  */
 static inline void __attribute__((always_inline)) enter_pmode(
-  const void *entrypoint, const unsigned char segment) {
+  const void *entrypoint, const unsigned char code_segment, const unsigned char data_segment) {
   #ifdef ARCH_x86
   /*
    * from Intel® 64 and IA-32 Architectures Software Developer’s Manual
@@ -24,7 +25,14 @@ static inline void __attribute__((always_inline)) enter_pmode(
     "or $1, %%eax\n"
     "mov %%eax, %%cr0\n"
     :::"eax");
-  asm volatile("ljmp %0, %1"::"i"(segment<<3), "i"(entrypoint):);
+  /*
+   * Let's jump to protected mode. Unfortunately, since this will mess with the
+   * stack, we can't pass cdecl here. We have to pass via registers.
+   * We will use the following calling convention here:
+   *   ECX: code segment
+   *   EDX: data segment
+   */
+  asm volatile("ljmp %0, %1"::"i"(code_segment<<3), "i"(entrypoint),"c"(code_segment),"d"(data_segment):);
   /*
    * Most likely the stack is all fucked up after this. At least, we should
    * never return from here.

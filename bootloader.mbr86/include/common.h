@@ -30,7 +30,7 @@
 /**
  * Length of Stage2 in sectors
  */
-#define STAGE2_LENGTH 2
+#define STAGE2_LENGTH 3
 
 /**@}*/
 
