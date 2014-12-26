@@ -1,5 +1,6 @@
-#include <arch.h>
-#include <common.h>
+#include <common/arch.h>
+#include <common/config.h>
+
 #include <drivers/video.h>
 
 typedef struct {

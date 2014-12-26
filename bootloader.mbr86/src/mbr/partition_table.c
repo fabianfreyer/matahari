@@ -1,4 +1,4 @@
-#include <partition_table.h>
+#include <common/partition_table.h>
 
 mbr_t partition_table mbr = {
   .p1 = {

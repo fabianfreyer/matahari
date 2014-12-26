@@ -1,6 +1,6 @@
 #pragma once
 
-#include <partition_table.h>
+#include <common/partition_table.h>
 extern mbr_t mbr;
 
 char get_bios_drive();

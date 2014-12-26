@@ -1,5 +1,5 @@
-#include <arch.h>
-#include <code16.h>
+#include <common/arch.h>
+#include <common/code16.h>
 
 #include <mbr/features.h>
 #include <mbr/io.h>

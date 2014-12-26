@@ -3,7 +3,7 @@
  * Include this file in every c file that contains code running on real mode.
  */
 
-#include <arch.h>
+#include <common/arch.h>
 
 /**
  * This is a really ugly hack to compile code for x86 real mode.

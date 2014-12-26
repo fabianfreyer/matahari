@@ -1,11 +1,11 @@
-#include <arch.h>
-#include <code16.h>
-#include <common.h>
-#include <interrupts.h>
+#include <common/arch.h>
+#include <common/code16.h>
+#include <common/config.h>
+#include <common/interrupts.h>
 
 #include <mbr/io.h>
-#include <gdt.h>
-#include <pmode.h>
+#include <stage2/gdt.h>
+#include <stage2/pmode.h>
 
 #define GLOBAL_CODE_SEGMENT 1
 #define GLOBAL_DATA_SEGMENT 2

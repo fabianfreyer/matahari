@@ -1,5 +1,5 @@
 #pragma once
-#include <code16.h>
+#include <common/code16.h>
 
 /**
  * \fn          void puts16(const char *s)

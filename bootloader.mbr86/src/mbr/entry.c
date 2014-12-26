@@ -1,12 +1,12 @@
-#include <arch.h>
-#include <code16.h>
+#include <common/arch.h>
+#include <common/code16.h>
 
-#include <common.h>
+#include <common/config.h>
 
 #include <mbr/features.h>
 #include <mbr/io.h>
 #include <mbr/disk.h>
-#include <partition_table.h>
+#include <common/partition_table.h>
 
 extern void stage2_entry(unsigned char drive);
 

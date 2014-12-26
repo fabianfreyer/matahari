@@ -1,6 +1,7 @@
-#include <arch.h>
-#include <code16.h>
-#include <gdt.h>
+#include <common/arch.h>
+#include <common/code16.h>
+
+#include <stage2/gdt.h>
 
 gdt_entry_t gdt_entry(void *base, void *limit, unsigned short flag) {
   gdt_entry_t gate;

@@ -1,6 +1,6 @@
-#include <arch.h>
-#include <common.h>
-#include <pmode.h>
+#include <common/arch.h>
+#include <common/config.h>
+#include <stage2/pmode.h>
 #include <drivers/video.h>
 
 #ifdef ARCH_x86
