@@ -16,3 +16,7 @@ tools/crosstool-ng-*.tar.*
 tools/crosstool-ng-*/
 tools/lib/
 tools/share/
+
+#stuff
+*.swp
+a.out
