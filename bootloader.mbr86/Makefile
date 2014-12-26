@@ -24,7 +24,7 @@ stage2_MODULES=entry gdt pmode video
 stage2_SECTIONS=.text_stage2 .data_stage2
 
 .PHONY: all
-all: build32/image.bin section-headers
+all: dirs build32/image.bin section-headers
 
 .PHONY: section-headers
 section-headers: $(OUTPUT)/loader.elf
@@ -45,7 +45,11 @@ debug: qemu.pid $(OUTPUT)/loader.elf
 
 .PHONY: clean
 clean:
-	rm $(OUTPUT)/*
+	rm -r $(OUTPUT)/*
+
+.PHONY: dirs
+dirs:
+	mkdir -p $(foreach component,$(COMPONENTS),$(OUTPUT)/$(component))
 
 build32/image.bin: $(foreach component,$(COMPONENTS),$(OUTPUT)/$(component).bin)
 	cat build32/mbr.bin build32/stage2.bin > $@
@@ -56,19 +60,19 @@ $(OUTPUT)/%.bin: $(OUTPUT)/loader.elf
 %.bin : %.elf
 	$(call toolchain,$(OBJCOPY)) -O binary $< $@
 
-$(OUTPUT)/loader.elf: loader.ld $(foreach component, $(COMPONENTS),$(foreach mod,$($(component)_MODULES),$(OUTPUT)/$(mod).$(component).o))
+$(OUTPUT)/loader.elf: loader.ld $(foreach component, $(COMPONENTS),$(foreach mod,$($(component)_MODULES),$(OUTPUT)/$(component)/$(mod).o))
 	$(call toolchain,$(LD)) -T$(filter %.ld,$^) $(LDFLAGS) -o $@ $(filter %.o,$^)
 
 .PHONY: depend
 depend: $(OUTPUT)/loader.elf.depend
 
-$(OUTPUT)/loader.elf.depend: $(foreach component, $(COMPONENTS),$(foreach mod,$($(component)_MODULES),$(OUTPUT)/$(mod).$(component).depend))
+$(OUTPUT)/loader.elf.depend: $(foreach component, $(COMPONENTS),$(foreach mod,$($(component)_MODULES),$(OUTPUT)/$(component)/$(mod).depend))
 	cat $^ > $@
 
 include $(OUTPUT)/loader.elf.depend
 
-$(OUTPUT)/%.o: src/%.c
+$(OUTPUT)/%.o: src/%.c dirs
 	$(call toolchain,$(CC)) $(CFLAGS) -c -o $@ $<
 
-$(OUTPUT)/%.depend: src/%.c
-	$(call toolchain,$(CC)) $(CFLAGS) -MM -MT $(OUTPUT)/$*.o -MF $@ $^
+$(OUTPUT)/%.depend: src/%.c dirs
+	$(call toolchain,$(CC)) $(CFLAGS) -MM -MT $(OUTPUT)/$*.o -MF $@ $<

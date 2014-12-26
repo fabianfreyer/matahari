@@ -1,6 +1,6 @@
 #include <arch.h>
 #include <common.h>
-#include <video.h>
+#include <drivers/video.h>
 
 typedef struct {
   char line;

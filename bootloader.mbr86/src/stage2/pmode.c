@@ -1,7 +1,7 @@
 #include <arch.h>
 #include <common.h>
 #include <pmode.h>
-#include <video.h>
+#include <drivers/video.h>
 
 #ifdef ARCH_x86
 void setup_segment_registers(unsigned char segment) {
