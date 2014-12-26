@@ -20,7 +20,7 @@ mbr_MODULES=entry disk io partition_table
 mbr_SECTIONS=.text_mbr .data_mbr .partition_table .sig
 
 #Stage2 configuration
-stage2_MODULES=entry gdt pmode
+stage2_MODULES=entry gdt pmode video
 stage2_SECTIONS=.text_stage2 .data_stage2
 
 .PHONY: all
