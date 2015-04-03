@@ -5,6 +5,7 @@
 
 #include <mbr/io.h>
 #include <stage2/gdt.h>
+#include <stage2/a20.h>
 #include <stage2/pmode.h>
 
 #define GLOBAL_CODE_SEGMENT 1
@@ -34,11 +35,41 @@ void dump(void * addr, unsigned int count) {
 
 void stage2_entry(unsigned char boot_drive) {
   puts16("in stage2\n\r");
-  puts16("loading gdt...\n\r");
 
-  /*
-   * Disable all interrupts before loading GDT
-   */
+  // enabling a20 line
+#ifdef DEBUG
+  puts16("enabling a20 line... ");
+#endif
+  unsigned char a20;
+  if (!a20_memory_status()) {
+    a20=a20_enable();
+#ifdef DEBUG
+    switch (a20) {
+    case A20_SET_BIOS:
+      puts16("set using BIOS\n\r");
+      break;
+    case A20_SET_FAST:
+      puts16("set using output port\n\r");
+      break;
+    case A20_SET_KEYB:
+      puts16("set using Keyboard controller command\n\r");
+      break;
+    case A20_SET_KEYB_OUT:
+      puts16("set using Keyboard controller pin\n\r");
+      break;
+    case A20_SET_FAILED:
+    default:
+      puts16("failed.\n\r");
+    }
+  }
+  else puts16("already enabled \n\r");
+#else
+  }
+#endif
+
+  // Load the GDT
+  puts16("loading gdt...\n\r");
+  // Disable all interrupts before loading GDT
   disable_interrupts();
   disable_nmi();
   setup_global_gdt();

@@ -3,6 +3,7 @@
  * Include this file in every c file that contains code running on real mode.
  */
 
+#include <common/common.h>
 #include <common/arch.h>
 
 /**
@@ -15,3 +16,29 @@ asm (".code16gcc\n");
 
 #define REAL_MODE
 #define CODE16
+
+
+#define set_ds(_ds) MACRO(asm volatile("movw %0 %%ds" :: "rm"(_ds) :);)
+#define set_fs(_fs) MACRO(asm volatile("movw %0,%%fs" :: "rm"(_fs) :);)
+#define set_gs(_gs) MACRO(asm volatile("movw %0,%%gs" :: "rm"(_gs) :);)
+
+#define read_ds_32(addr, var) MACRO(asm volatile("movl %%ds:%1,%0" : "=r"(var) : "m" (*(unsigned int *)addr) :);)
+#define read_ds_16(addr, var) MACRO(asm volatile("movw %%ds:%1,%0" : "=r"(var) : "m" (*(unsigned short int *)addr) :);)
+#define read_ds_8(addr, var) MACRO(asm volatile("movb %%ds:%1,%0" : "=r"(var) : "m" (*(unsigned char *)addr) :);)
+#define write_ds_32(addr, var) MACRO(asm volatile("movl %1,%%ds:%0" : "+m" (*(unsigned int *)addr) : "ri"(var) :);)
+#define write_ds_16(addr, var) MACRO(asm volatile("movw %1,%%ds:%0" : "+m" (*(unsigned short int *)addr) : "ri"(var) :);)
+#define write_ds_8(addr, var) MACRO(asm volatile("movb %1,%%ds:%0" : "+m" (*(unsigned char *)addr) : "ri"(var) :);)
+
+#define read_fs_32(addr, var) MACRO(asm volatile("movl %%fs:%1,%0" : "=r"(var) : "m" (*(unsigned int *)addr) :);)
+#define read_fs_16(addr, var) MACRO(asm volatile("movw %%fs:%1,%0" : "=r"(var) : "m" (*(unsigned short int *)addr) :);)
+#define read_fs_8(addr, var) MACRO(asm volatile("movb %%fs:%1,%0" : "=r"(var) : "m" (*(unsigned char *)addr) :);)
+#define write_fs_32(addr, var) MACRO(asm volatile("movl %1,%%fs:%0" : "+m" (*(unsigned int *)addr) : "ri"(var) :);)
+#define write_fs_16(addr, var) MACRO(asm volatile("movw %1,%%fs:%0" : "+m" (*(unsigned short int *)addr) : "ri"(var) :);)
+#define write_fs_8(addr, var) MACRO(asm volatile("movb %1,%%fs:%0" : "+m" (*(unsigned char *)addr) : "ri"(var) :);)
+
+#define read_gs_32(addr, var) MACRO(asm volatile("movl %%gs:%1,%0" : "=r"(var) : "m" (*(unsigned int *)addr) :);)
+#define read_gs_16(addr, var) MACRO(asm volatile("movw %%gs:%1,%0" : "=r"(var) : "m" (*(unsigned short int *)addr) :);)
+#define read_gs_8(addr, var) MACRO(asm volatile("movb %%gs:%1,%0" : "=r"(var) : "m" (*(unsigned char *)addr) :);)
+#define write_gs_32(addr, var) MACRO(asm volatile("movl %1,%%gs:%0" : "+m" (*(unsigned int *)addr) : "ri"(var) :);)
+#define write_gs_16(addr, var) MACRO(asm volatile("movw %1,%%gs:%0" : "+m" (*(unsigned short int *)addr) : "ri"(var) :);)
+#define write_gs_8(addr, var) MACRO(asm volatile("movb %1,%%gs:%0" : "+m" (*(unsigned char *)addr) : "ri"(var) :);)
