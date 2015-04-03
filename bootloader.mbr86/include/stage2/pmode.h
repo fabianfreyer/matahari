@@ -8,7 +8,7 @@ void stage2_pmode();
  * header file. I mean, it's static, anyways.
  */
 static inline void __attribute__((always_inline)) enter_pmode(
-  const void *entrypoint, const unsigned char code_segment, const unsigned char data_segment) {
+  const void *entrypoint, const uint8_t code_segment, const uint8_t data_segment) {
   #ifdef ARCH_x86
   /*
    * from Intel® 64 and IA-32 Architectures Software Developer’s Manual

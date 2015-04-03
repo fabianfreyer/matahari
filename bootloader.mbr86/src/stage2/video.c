@@ -4,13 +4,13 @@
 #include <drivers/video.h>
 
 typedef struct {
-  char line;
-  char column;
+  int8_t line;
+  int8_t column;
 } cursor_position_t;
 
 typedef struct __attribute__((__packed__)) {
   char ascii;
-  unsigned char attr;
+  uint8_t attr;
 } screen_character_t;
 
 /*
@@ -25,7 +25,7 @@ screen_character_t* video_init() {
   /*
    * Get the video memory pointer, depending on detected hardware.
    */
-  const unsigned short *bda_detected_hardware = (const unsigned short *) 0x410;
+  const uint16_t *bda_detected_hardware = (const uint16_t *) 0x410;
   switch (*bda_detected_hardware & 0x30) {
     case 0x20: // color 80x25
       return (screen_character_t*) 0xB8000;
@@ -44,13 +44,13 @@ screen_character_t* video_init() {
 #endif
 }
 
-void puts32_color(unsigned char color, const char *string ){
+void puts32_color(uint8_t color, const char *string ){
   volatile screen_character_t* video = video_init();
   // Write a string
   if(video) {
     do {
       // Calculate offset
-      unsigned short offset = (cursor_position.line * screen_size.column + cursor_position.column);
+      uint16_t offset = (cursor_position.line * screen_size.column + cursor_position.column);
       switch(*string) {
       case '\n':
         cursor_position.line++;

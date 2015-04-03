@@ -6,18 +6,18 @@
 #include <common/partition_table.h>
 extern mbr_t mbr;
 
-char get_bios_drive() {
-  unsigned char bios_drive = 0;
+int8_t get_bios_drive() {
+  uint8_t bios_drive = 0;
   asm volatile("movb %%dl, %0" : "=r"(bios_drive));
   return bios_drive;
 }
 
 #ifdef MBR_GET_DRIVE_GEOM
-int __attribute__((noinline)) get_drive_geom(
-    drive_geom *g, unsigned char drive) {
-unsigned short failed=0;
+int32_t __attribute__((noinline)) get_drive_geom(
+    drive_geom *g, uint8_t drive) {
+uint16_t failed=0;
 #ifdef ARCH_x86
-  unsigned short tmp1, tmp2;
+  uint16_t tmp1, tmp2;
   __asm__ __volatile__ (
       "movw $0, %0\n"
       "xor %%esi,%%esi\n"
@@ -39,7 +39,7 @@ unsigned short failed=0;
 #endif
 
 #ifdef MBR_CHS_READ
-unsigned char __attribute__((noinline)) chs_read(const void *buffer, unsigned char cylinder, unsigned char head, unsigned short sector, unsigned char blocks, unsigned char drive) {
+uint8_t __attribute__((noinline)) chs_read(const void *buffer, uint8_t cylinder, uint8_t head, uint16_t sector, uint8_t blocks, uint8_t drive) {
 #ifdef ARCH_x86
   asm volatile(
   "int $0x13"
@@ -47,23 +47,23 @@ unsigned char __attribute__((noinline)) chs_read(const void *buffer, unsigned ch
     : "a"(0x200|blocks),
       "b"(buffer),
       "c"((cylinder&0xFF)<<8|(cylinder&0x300)>>2|(sector&0x3F)),
-      "d"((unsigned short) head<<8|drive)
+      "d"((uint16_t) head<<8|drive)
     : "cc","memory"
   );
-  /* unsigned short status=i(a>>8); */
+  /* uint16_t status=i(a>>8); */
 #else
 #warning chs_read not implemented for arch
 #endif
-  return 0; //(unsigned char) (a&0xFF);
+  return 0; //(uint8_t) (a&0xFF);
 }
 #endif
 
 #ifdef MBR_LBA_READ
 void __attribute__((noinline)) lba_read(
-  const void *buffer, unsigned int lba, unsigned char blocks,
-  drive_geom *g, unsigned char drive) {
+  const void *buffer, uint32_t lba, uint8_t blocks,
+  drive_geom *g, uint8_t drive) {
 #ifdef ARCH_x86
-  unsigned char c, h, s;
+  uint8_t c, h, s;
   c = C(lba, g->spt, g->heads);
   h = H(lba, g->spt, g->heads);
   s = S(lba, g->spt, g->heads);

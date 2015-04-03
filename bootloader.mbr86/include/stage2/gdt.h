@@ -32,15 +32,15 @@
  * \note is packed, size must be 8 bytes.
  */
 typedef struct __attribute__((__packed__)) {
-  unsigned int h : 32;
-  unsigned int l : 32;
+  uint32_t h : 32;
+  uint32_t l : 32;
 } gdt_entry_t;
 
 
 typedef struct __attribute__((__packed__)) {
-  unsigned int          gdt_size            :16;
+  uint32_t          gdt_size            :16;
   gdt_entry_t*            gdt_descriptors;
 } gdt_t;
 
-void gdt_load(gdt_entry_t *entries, unsigned short count);
-gdt_entry_t gdt_entry(void *base, void *limit, unsigned short flag);
+void gdt_load(gdt_entry_t *entries, uint16_t count);
+gdt_entry_t gdt_entry(void *base, void *limit, uint16_t flag);

@@ -3,23 +3,23 @@
 
 #include <stage2/gdt.h>
 
-gdt_entry_t gdt_entry(void *base, void *limit, unsigned short flag) {
+gdt_entry_t gdt_entry(void *base, void *limit, uint16_t flag) {
   gdt_entry_t gate;
 
-  ((char*) &gate)[0] = (unsigned int)  limit          & 0xFF;
-  ((char*) &gate)[1] = ((unsigned int) limit >> 0x08) & 0xFF;
-  ((char*) &gate)[2] = (unsigned int)  base           & 0xFF;
-  ((char*) &gate)[3] = ((unsigned int) base >> 0x08)  & 0xFF;
-  ((char*) &gate)[4] = ((unsigned int) base >> 0x10)  & 0xFF;
-  ((char*) &gate)[5] = flag & 0xFF;
-  ((char*) &gate)[6] = ((unsigned int) limit >> 0x10) & 0x0F;
-  ((char*) &gate)[6] |=               (flag >> 0x08)  & 0xF0;
-  ((char*) &gate)[7] = ((unsigned int) base >> 0x18)  & 0xFF;
+  ((int8_t*) &gate)[0] = (uint32_t)  limit          & 0xFF;
+  ((int8_t*) &gate)[1] = ((uint32_t) limit >> 0x08) & 0xFF;
+  ((int8_t*) &gate)[2] = (uint32_t)  base           & 0xFF;
+  ((int8_t*) &gate)[3] = ((uint32_t) base >> 0x08)  & 0xFF;
+  ((int8_t*) &gate)[4] = ((uint32_t) base >> 0x10)  & 0xFF;
+  ((int8_t*) &gate)[5] = flag & 0xFF;
+  ((int8_t*) &gate)[6] = ((uint32_t) limit >> 0x10) & 0x0F;
+  ((int8_t*) &gate)[6] |=               (flag >> 0x08)  & 0xF0;
+  ((int8_t*) &gate)[7] = ((uint32_t) base >> 0x18)  & 0xFF;
 
   return gate;
 }
 
-void gdt_load(gdt_entry_t *entries, unsigned short count) {
+void gdt_load(gdt_entry_t *entries, uint16_t count) {
   /* load the GDT */
   #ifdef ARCH_x86
   /*

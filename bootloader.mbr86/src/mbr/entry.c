@@ -8,7 +8,7 @@
 #include <mbr/disk.h>
 #include <common/partition_table.h>
 
-extern void stage2_entry(unsigned char drive);
+extern void stage2_entry(uint8_t drive);
 
 #ifdef ARCH_x86
 __asm__ ("jmpl  $0, $main\n");
@@ -16,7 +16,7 @@ __asm__ ("jmpl  $0, $main\n");
 
 
 void __attribute__((noreturn)) main(){
-  unsigned char boot_drive = get_bios_drive();
+  uint8_t boot_drive = get_bios_drive();
 
   #ifdef PRINT
   puts16("booting from ");

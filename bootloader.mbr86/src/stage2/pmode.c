@@ -4,7 +4,7 @@
 #include <drivers/video.h>
 
 #ifdef ARCH_x86
-void setup_segment_registers(unsigned char segment) {
+void setup_segment_registers(uint8_t segment) {
   /* Set the data segments */
   asm volatile(
     "mov %0, %%ds\n"
@@ -21,7 +21,7 @@ void setup_segment_registers(unsigned char segment) {
  */
 void stage2_pmode() {
 #ifdef ARCH_x86
-  unsigned char global_code_segment, global_data_segment;
+  uint8_t global_code_segment, global_data_segment;
   // As commeted in pmode.h, we will get some arguments in registers c and d.
   asm volatile("":"=c"(global_code_segment), "=d"(global_data_segment):);
   setup_segment_registers(global_data_segment);

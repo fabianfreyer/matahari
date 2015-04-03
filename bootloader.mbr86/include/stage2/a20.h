@@ -9,13 +9,13 @@
 #define A20_SET_FAILED (1<<6)
 #define A20_BIOS_UNSUPPORTED (1<<7)
 
-unsigned char a20_enabled();
-unsigned char a20_memory_status();
-unsigned char a20_bios_status();
-unsigned char a20_bios_enable();
-unsigned char a20_bios_disable();
-unsigned char a20_bios_support();
+uint8_t a20_enabled();
+uint8_t a20_memory_status();
+uint8_t a20_bios_status();
+uint8_t a20_bios_enable();
+uint8_t a20_bios_disable();
+uint8_t a20_bios_support();
 void a20_fast_enable();
 void a20_keyb_out_enable();
 void a20_keyb_enable();
-unsigned char a20_enable();
+uint8_t a20_enable();

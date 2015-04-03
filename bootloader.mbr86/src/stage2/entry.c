@@ -14,15 +14,15 @@
 void setup_global_gdt();
 
 #ifdef DEBUG
-void dumpb(unsigned char byte) {
-  unsigned char hi_nybble = byte >> 4;
-  unsigned char lo_nybble = byte & 0xF;
+void dumpb(uint8_t byte) {
+  uint8_t hi_nybble = byte >> 4;
+  uint8_t lo_nybble = byte & 0xF;
   putc16((hi_nybble)+(hi_nybble<0xA?'0':'a'-0xA));
   putc16((lo_nybble)+(lo_nybble<0xA?'0':'a'-0xA));
 }
-void dump(void * addr, unsigned int count) {
-  unsigned char* byte = addr;
-  int i;
+void dump(void * addr, uint32_t count) {
+  uint8_t* byte = addr;
+  int32_t i;
   for(i=0; i<count; i++) {
     dumpb(byte[i]);
     if (! (i+1) % 16) puts16("\n\r");
@@ -33,14 +33,14 @@ void dump(void * addr, unsigned int count) {
 }
 #endif
 
-void stage2_entry(unsigned char boot_drive) {
+void stage2_entry(uint32_t boot_drive) {
   puts16("in stage2\n\r");
 
   // enabling a20 line
 #ifdef DEBUG
   puts16("enabling a20 line... ");
 #endif
-  unsigned char a20;
+  uint8_t a20;
   if (!a20_memory_status()) {
     a20=a20_enable();
 #ifdef DEBUG
@@ -75,7 +75,7 @@ void stage2_entry(unsigned char boot_drive) {
   setup_global_gdt();
   puts16("done\n\r");
   puts16("setting up VGA\n\r");
-  unsigned char video_mode = 0x3;
+  uint8_t video_mode = 0x3;
   asm volatile("int $0x10"::"a"(video_mode):);
   puts16("entering protected mode...\n\r");
 
