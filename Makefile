@@ -5,6 +5,8 @@ export LD=ld
 export OBJDUMP=objdump
 export OBJCOPY=objcopy
 
+IMAGE_SIZE=64 #mb
+
 #Tools
 export TOOL_PATH=$(TOP_DIR)tools/bin
 toolify_=$(TOOL_PATH)/$(1)
@@ -27,6 +29,11 @@ bootloader.mbr86: toolchain
 bootloader.mbr86-debug:
 	$(MAKE) -C bootloader.mbr86 debug
 
+
+image.bin: bootloader.mbr86
+	#dd if=/dev/zero of=image.img bs=1m count=$(IMAGE_SIZE)
+	cp foo.img image.img
+	dd conv=notrunc if=bootloader.mbr86/build32/image.bin of=image.img
 
 .PHONY: toolchain
 toolchain: $(CT_NG) $(call toolchain_,gcc)

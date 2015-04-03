@@ -1,6 +1,7 @@
 #osx
 floppy.dmg
 .DS_STORE
+*.sparseimage
 
 #ct-ng
 crosstool-ng-*.tar.bz
@@ -20,3 +21,4 @@ tools/share/
 #stuff
 *.swp
 a.out
+*.img
