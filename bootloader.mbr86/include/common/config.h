@@ -26,6 +26,3 @@
 
 /**@}*/
 
-
-#define BOCHS_BREAK _define_wrap(asm volatile ("xchgw %bx, %bx");)
-#define YOU_SHALL_NOT_PASS _define_wrap(while(1) {}; )
