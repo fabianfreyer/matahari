@@ -26,7 +26,9 @@ SECTIONS {
     build32/mbr/?*.o (.rodata*);
     build32/mbr/?*.o (COMMON);
     _data_mbr_end = .;
+    ASSERT((_data_mbr_end - _text_mbr) <= 0x200, "mbr too large");
   } :data
+
   .partition_table : AT(0x7DBE)
   {
     build32/mbr/partition_table.o(.partition_table);
@@ -37,9 +39,10 @@ SECTIONS {
   }
 
   . = 0x1000;
+
   /* Stage2, loaded by Stage1 */
   .text_stage2 : AT(0x1000) {
-    _stage2_load_adress = .;
+    _stage2_load_address = ABSOLUTE(.);
     _text_stage2 = .;
     build32/stage2/?*.o(.text.startup);
     build32/stage2/?*.o(.text);
@@ -53,6 +56,8 @@ SECTIONS {
     build32/stage2/?*.o(.rodata*);
     build32/stage2/?*.o(COMMON);
     _data_stage2_end = .;
+    _stage2_end = .;
+    _stage2_size = _stage2_end - _stage2_load_address;
   } :data
 
   /* Discard these sections */

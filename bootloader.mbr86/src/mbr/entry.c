@@ -33,17 +33,23 @@ void __attribute__((noreturn)) main(){
 
   // Load Stage2
   #ifdef MBR_CHS_READ
-  void (*stage2)() = (void (*)()) STAGE2_BASE;
 
   #ifdef MBR_PRINT
   puts16("Stage 2 loading, please wait...\r\n");
   #endif
+
+  //calculate stage2 length
+  extern unsigned long _stage2_load_address;
+  void (*stage2)() = (void (*)()) &_stage2_load_address;
+  extern unsigned long _stage2_size;
+  uint16_t stage2_blocks = ((uint32_t) &_stage2_size >> 9) + (((uint32_t) &_stage2_size % 0x200)?1:0);
+
   chs_read(
     (void*) stage2,
     STAGE2_CYLINDER,
     STAGE2_HEAD,
     STAGE2_SECTOR,
-    STAGE2_LENGTH,
+    stage2_blocks,
     boot_drive);
   stage2_entry(boot_drive);
   /* This point should never be reached */

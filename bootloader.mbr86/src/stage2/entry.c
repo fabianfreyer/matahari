@@ -88,8 +88,15 @@ void stage2_entry(uint32_t boot_drive) {
     .boot_device = boot_drive
   };
 #ifdef DEBUG
-  puts16("in stage2\n\r");
+  puts16("stage2 loaded");
+  extern unsigned long _stage2_load_address;
+  extern unsigned long _stage2_size;
+  puts16(" at=0x"), dump_uint32((uint32_t) &_stage2_load_address);
+  puts16(" length=0x"), dump_uint32((uint32_t) &_stage2_size), puts16("\n\r");
 #endif
+
+  uint16_t stage2_blocks_foo = ((uint32_t) &_stage2_size >> 9) + (((uint32_t) &_stage2_size % 0x200)?1:0);
+  puts16("stage2_blocks ="), dump_uint32((uint32_t) stage2_blocks_foo), puts16("\n\r");
 
   // enabling a20 line
   setup_a20();
