@@ -16,11 +16,22 @@ CFLAGS=-g -Os -m32 -march=i686 -ffreestanding -fno-pic -ffast-math -fomit-frame-
 COMPONENTS=mbr stage2
 
 #MBR configuration
-mbr_MODULES=entry disk io partition_table
+mbr_MODULES= \
+	entry \
+	disk \
+	io \
+	partition_table
 mbr_SECTIONS=.text_mbr .data_mbr .partition_table .sig
 
 #Stage2 configuration
-stage2_MODULES=entry gdt pmode video a20 debug
+stage2_MODULES= \
+	entry \
+	gdt \
+	pmode \
+	video \
+	a20 \
+	mem \
+	debug
 stage2_SECTIONS=.text_stage2 .data_stage2
 
 .PHONY: all

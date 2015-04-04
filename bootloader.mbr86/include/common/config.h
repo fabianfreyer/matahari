@@ -7,8 +7,6 @@
  */
 #define STAGE1_BASE 0x7C00
 
-#define MULTIBOOT_BASE 0x7000
-
 /**
  * \defgroup stage2_config Stage2 configuration data
  * @{
@@ -18,6 +16,8 @@
  * stage2 base adress. This is where stage2 will be loaded.
  */
 #define STAGE2_BASE 0x1000
+#define SMAP_BASE 0x7000
+#define SMAP_LENGTH 0xB00
 
 /**
  * CHS Adress of Stage2
@@ -31,7 +31,7 @@
 /**
  * Length of Stage2 in sectors
  */
-#define STAGE2_LENGTH 5
+#define STAGE2_LENGTH 13
 
 /**@}*/
 

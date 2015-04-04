@@ -8,6 +8,7 @@
 #include <stage2/gdt.h>
 #include <stage2/a20.h>
 #include <stage2/pmode.h>
+#include <stage2/mem.h>
 #include <stage2/debug.h>
 
 int __attribute__((noinline)) get_drive_geom(
@@ -95,6 +96,9 @@ void stage2_entry(uint32_t boot_drive) {
 
   // Load the GDT
   setup_gdt();
+
+  // Detect memory
+  detect_memory(&multiboot);
 
   // Inspect drive geometry...
   puts16("inspecting drive geom... {spt=");

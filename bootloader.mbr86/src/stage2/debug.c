@@ -20,4 +20,24 @@ void dump(void * addr, uint32_t count) {
   }
   puts16("\n\r");
 }
+void dump_uint64(uint64_t val) {
+  dumpb((val >> 0x38) & 0xFF);
+  dumpb((val >> 0x30) & 0xFF);
+  dumpb((val >> 0x28) & 0xFF);
+  dumpb((val >> 0x20) & 0xFF);
+  dumpb((val >> 0x18) & 0xFF);
+  dumpb((val >> 0x10) & 0xFF);
+  dumpb((val >> 0x8) & 0xFF);
+  dumpb(val & 0xFF);
+}
+void dump_uint32(uint32_t val) {
+  dumpb((val >> 0x18) & 0xFF);
+  dumpb((val >> 0x10) & 0xFF);
+  dumpb((val >> 0x8) & 0xFF);
+  dumpb(val & 0xFF);
+}
+void dump_uint16(uint16_t val) {
+  dumpb((val >> 0x8) & 0xFF);
+  dumpb(val & 0xFF);
+}
 #endif

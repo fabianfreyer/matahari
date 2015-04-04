@@ -38,7 +38,7 @@ typedef struct {
 } __attribute__((packed)) mb_mod_t;
 
 typedef struct {
-  size_t size;
+  uint32_t size;
   uint64_t addr;
   uint64_t length;
   uint32_t type;
@@ -66,9 +66,9 @@ typedef struct {
     mb_aout_sym_table_t aout_sym_table;
     mb_elf_sect_table_t elf_sect_table;
   } syms;
-  size_t mmap_length;
+  uint32_t mmap_length;
   mb_mmap_t* mmap_addr;
-  size_t drives_length;
+  uint32_t drives_length;
   void* drives_addr;
   uint32_t config_table;
   char* boot_loader_name;
