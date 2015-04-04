@@ -7,6 +7,7 @@
  */
 #define STAGE1_BASE 0x7C00
 
+#define MULTIBOOT_BASE 0x7000
 
 /**
  * \defgroup stage2_config Stage2 configuration data

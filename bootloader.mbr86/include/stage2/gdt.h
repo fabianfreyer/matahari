@@ -27,6 +27,9 @@
 
 #define GDT_OFFSET(x) ((x) <<3)
 
+#define GDT_GLOBAL_CODE_SEGMENT 1
+#define GDT_GLOBAL_DATA_SEGMENT 2
+
 /**
  * \brief Entry for the General descriptor table (32Bit)
  * \note is packed, size must be 8 bytes.
@@ -36,7 +39,6 @@ typedef struct __attribute__((__packed__)) {
   uint32_t l : 32;
 } gdt_entry_t;
 
-
 typedef struct __attribute__((__packed__)) {
   uint32_t          gdt_size            :16;
   gdt_entry_t*            gdt_descriptors;
@@ -44,3 +46,4 @@ typedef struct __attribute__((__packed__)) {
 
 void gdt_load(gdt_entry_t *entries, uint16_t count);
 gdt_entry_t gdt_entry(void *base, void *limit, uint16_t flag);
+void setup_global_gdt();

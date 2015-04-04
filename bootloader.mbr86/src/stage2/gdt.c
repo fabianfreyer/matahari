@@ -1,6 +1,10 @@
 #include <common/arch.h>
 #include <common/code16.h>
-
+#include <common/config.h>
+#ifdef DEBUG
+#include <mbr/io.h>
+#include <stage2/debug.h>
+#endif
 #include <stage2/gdt.h>
 
 gdt_entry_t gdt_entry(void *base, void *limit, uint16_t flag) {
@@ -35,5 +39,37 @@ void gdt_load(gdt_entry_t *entries, uint16_t count) {
   asm volatile("lgdt %0" : : "m" (gdtp));
   #else
   #warning gdt_load not implemented for arch
+  #endif
+}
+
+
+/**
+ * Sets up a global code page and a global data page
+ */
+void setup_global_gdt() {
+  static gdt_entry_t gdt_entries[3];
+  /* Null entry */
+  gdt_entries[0] = gdt_entry((void*) 0, (void*) 0,0);
+
+  /* Global code segment */
+  gdt_entries[GDT_GLOBAL_CODE_SEGMENT] = gdt_entry((void*) 0, (void*) 0xFFFFFFFFU,
+    SEG_DESCTYPE(1) | SEG_PRES(1) | SEG_SAVL(0) | \
+    SEG_LONG(0)     | SEG_SIZE(1) | SEG_GRAN(1) | \
+    SEG_PRIV(0)     | SEG_CODE_EXRD);
+
+  /* Global data segment */
+  gdt_entries[GDT_GLOBAL_DATA_SEGMENT] = gdt_entry((void*) 0, (void*) 0xFFFFFFFFU,
+    SEG_DESCTYPE(1) | SEG_PRES(1) | SEG_SAVL(0) | \
+    SEG_LONG(0)     | SEG_SIZE(1) | SEG_GRAN(1) | \
+    SEG_PRIV(0)     | SEG_DATA_RDWR);
+
+  #ifdef DEBUG
+  puts16("null entry: ");
+  dump(&gdt_entries[0], sizeof(gdt_entry_t));
+  puts16("code entry: ");
+  dump(&gdt_entries[GDT_GLOBAL_CODE_SEGMENT], sizeof(gdt_entry_t));
+  puts16("data entry: ");
+  dump(&gdt_entries[GDT_GLOBAL_DATA_SEGMENT], sizeof(gdt_entry_t));
+  gdt_load(gdt_entries, 3);
   #endif
 }

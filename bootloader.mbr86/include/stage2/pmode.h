@@ -8,7 +8,7 @@ void stage2_pmode();
  * header file. I mean, it's static, anyways.
  */
 static inline void __attribute__((always_inline)) enter_pmode(
-  const void *entrypoint, const uint8_t code_segment, const uint8_t data_segment) {
+  const void *entrypoint, const uint8_t code_segment, const uint8_t data_segment, const void* args) {
   #ifdef ARCH_x86
   /*
    * from Intel® 64 and IA-32 Architectures Software Developer’s Manual
@@ -31,8 +31,9 @@ static inline void __attribute__((always_inline)) enter_pmode(
    * We will use the following calling convention here:
    *   ECX: code segment
    *   EDX: data segment
+   *   EAX: args
    */
-  asm volatile("ljmp %0, %1"::"i"(code_segment<<3), "i"(entrypoint),"c"(code_segment),"d"(data_segment):);
+  asm volatile("ljmp %0, %1"::"i"(code_segment<<3), "i"(entrypoint),"c"(code_segment),"d"(data_segment), "a"(args):);
   /*
    * Most likely the stack is all fucked up after this. At least, we should
    * never return from here.

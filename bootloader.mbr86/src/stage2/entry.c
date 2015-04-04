@@ -2,41 +2,39 @@
 #include <common/code16.h>
 #include <common/config.h>
 #include <common/interrupts.h>
-
+#include <common/multiboot.h>
 #include <mbr/io.h>
+#include <mbr/disk.h>
 #include <stage2/gdt.h>
 #include <stage2/a20.h>
 #include <stage2/pmode.h>
+#include <stage2/debug.h>
 
-#define GLOBAL_CODE_SEGMENT 1
-#define GLOBAL_DATA_SEGMENT 2
-
-void setup_global_gdt();
-
-#ifdef DEBUG
-void dumpb(uint8_t byte) {
-  uint8_t hi_nybble = byte >> 4;
-  uint8_t lo_nybble = byte & 0xF;
-  putc16((hi_nybble)+(hi_nybble<0xA?'0':'a'-0xA));
-  putc16((lo_nybble)+(lo_nybble<0xA?'0':'a'-0xA));
-}
-void dump(void * addr, uint32_t count) {
-  uint8_t* byte = addr;
-  int32_t i;
-  for(i=0; i<count; i++) {
-    dumpb(byte[i]);
-    if (! (i+1) % 16) puts16("\n\r");
-    else if (! (i+1) % 8) puts16("  ");
-    else putc16(' ');
-  }
-  puts16("\n\r");
-}
+int __attribute__((noinline)) get_drive_geom(
+    drive_geom *g, unsigned char drive) {
+unsigned short failed=0;
+#ifdef ARCH_x86
+  unsigned short tmp1, tmp2;
+  __asm__ __volatile__ (
+      "movw $0, %0\n"
+      "xor %%esi,%%esi\n"
+      "int $0x13\n"
+      "setcb %0\n"
+      : "=m"(failed), "=c"(tmp1), "=d"(tmp2)
+      : "a"(0x0800), "d"(drive), "D"(0)
+      : "cc", "bx"
+   );
+  if(failed)
+    return failed;
+  g->spt = tmp1 & 0x3F;
+  g->heads = tmp2 >> 8;
+#else
+#warn get_drive_geom not implemented for arch
 #endif
+  return failed;
+}
 
-void stage2_entry(uint32_t boot_drive) {
-  puts16("in stage2\n\r");
-
-  // enabling a20 line
+void setup_a20() {
 #ifdef DEBUG
   puts16("enabling a20 line... ");
 #endif
@@ -66,54 +64,57 @@ void stage2_entry(uint32_t boot_drive) {
 #else
   }
 #endif
+}
 
-  // Load the GDT
+void setup_gdt() {
   puts16("loading gdt...\n\r");
   // Disable all interrupts before loading GDT
   disable_interrupts();
   disable_nmi();
   setup_global_gdt();
   puts16("done\n\r");
+}
+
+void setup_vga(uint8_t video_mode) {
   puts16("setting up VGA\n\r");
-  uint8_t video_mode = 0x3;
   asm volatile("int $0x10"::"a"(video_mode):);
+}
+
+void stage2_entry(uint32_t boot_drive) {
+  multiboot_t multiboot = {
+    .flags = 0x00 | MULTIBOOT_BOOT_LOADER_NAME | MULTIBOOT_BOOT_DEVICE,
+    .boot_loader_name = "Matahari",
+    .boot_device = boot_drive
+  };
+#ifdef DEBUG
+  puts16("in stage2\n\r");
+#endif
+
+  // enabling a20 line
+  setup_a20();
+
+  // Load the GDT
+  setup_gdt();
+
+  // Inspect drive geometry...
+  puts16("inspecting drive geom... {spt=");
+  drive_geom g;
+  get_drive_geom(&g, boot_drive);
+  dumpb(g.spt);
+  puts16(", heads=");
+  dumpb(g.heads);
+  puts16("}\n\r");
+
+  // Set up VGA
+  //setup_vga(0x3);
   puts16("entering protected mode...\n\r");
 
   /*
-   * Switch to protected mode
+   * Switch to protected mode, pass the multiboot structure.
    */
   enter_pmode((const void*) &stage2_pmode,
-    GLOBAL_CODE_SEGMENT,
-    GLOBAL_DATA_SEGMENT);
+    GDT_GLOBAL_CODE_SEGMENT,
+    GDT_GLOBAL_DATA_SEGMENT,
+    &multiboot);
 }
 
-/**
- * Sets up a global code page and a global data page
- */
-void setup_global_gdt() {
-  static gdt_entry_t gdt_entries[3];
-  /* Null entry */
-  gdt_entries[0] = gdt_entry((void*) 0, (void*) 0,0);
-
-  /* Global code segment */
-  gdt_entries[GLOBAL_CODE_SEGMENT] = gdt_entry((void*) 0, (void*) 0xFFFFFFFFU,
-    SEG_DESCTYPE(1) | SEG_PRES(1) | SEG_SAVL(0) | \
-    SEG_LONG(0)     | SEG_SIZE(1) | SEG_GRAN(1) | \
-    SEG_PRIV(0)     | SEG_CODE_EXRD);
-
-  /* Global data segment */
-  gdt_entries[GLOBAL_DATA_SEGMENT] = gdt_entry((void*) 0, (void*) 0xFFFFFFFFU,
-    SEG_DESCTYPE(1) | SEG_PRES(1) | SEG_SAVL(0) | \
-    SEG_LONG(0)     | SEG_SIZE(1) | SEG_GRAN(1) | \
-    SEG_PRIV(0)     | SEG_DATA_RDWR);
-
-  #ifdef DEBUG
-  puts16("null entry: ");
-  dump(&gdt_entries[0], sizeof(gdt_entry_t));
-  puts16("code entry: ");
-  dump(&gdt_entries[GLOBAL_CODE_SEGMENT], sizeof(gdt_entry_t));
-  puts16("data entry: ");
-  dump(&gdt_entries[GLOBAL_DATA_SEGMENT], sizeof(gdt_entry_t));
-  gdt_load(gdt_entries, 3);
-  #endif
-}
