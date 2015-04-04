@@ -43,6 +43,10 @@ $(call toolchain_,gcc):
 $(CT_NG):
 	tools/run install-ct-ng
 
+.PHONY: docs
+docs: doc/doxyfile
+	doxygen doc/doxyfile
+
 .PHONY: clean
 clean:
 	rm crosstool-ng-*.tar.bz2
