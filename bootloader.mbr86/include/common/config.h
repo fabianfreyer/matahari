@@ -1,4 +1,5 @@
 #pragma once
+#include <common/common.h>
 #include <common/types.h>
 
 #define DEBUG
@@ -25,7 +26,6 @@
 
 /**@}*/
 
-#define _define_wrap(x) do { x } while(0)
 
 #define BOCHS_BREAK _define_wrap(asm volatile ("xchgw %bx, %bx");)
 #define YOU_SHALL_NOT_PASS _define_wrap(while(1) {}; )

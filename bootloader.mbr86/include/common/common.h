@@ -2,4 +2,4 @@
 
 #include <common/types.h>
 
-#define MACRO(str) do{str}while(0);
+#define _define_wrap(x) do { x } while(0)
