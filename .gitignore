@@ -18,6 +18,10 @@ tools/crosstool-ng-*/
 tools/lib/
 tools/share/
 
+#docs
+doc/html
+doc/latex
+
 #stuff
 *.swp
 a.out
