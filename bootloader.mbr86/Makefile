@@ -31,6 +31,7 @@ stage2_MODULES= \
 	video \
 	a20 \
 	mem \
+	fat32 \
 	debug
 stage2_SECTIONS=.text_stage2 .data_stage2
 

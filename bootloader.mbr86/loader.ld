@@ -13,6 +13,7 @@ SECTIONS {
   . = 0x7C00;
   /* Stage1, a boot sector */
   .text_mbr : AT(0x7C00) {
+    mbr_load_addr = .;
     _text_mbr = .;
     build32/mbr/?*.o (.text.startup);
     build32/mbr/?*.o (.text);
