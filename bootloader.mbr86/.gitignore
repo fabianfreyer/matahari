@@ -1,2 +1,7 @@
-build32/
 .gdb_history
+*.o
+*.elf
+*.bin
+*.pyc
+
+.sconsign.dblite
