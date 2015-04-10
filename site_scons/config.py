@@ -1,5 +1,6 @@
 #vim : set ft=python :
 import debug
+from SCons.Script import Dir
 
 debugger = debug.Bochs
 
@@ -16,5 +17,5 @@ components = {
 
 toolchain = {
 	'tuple': 'i386-baremetal-elf',
-	'base': '../toolchain/target'
+	'base': 'toolchain/target'
 	}
