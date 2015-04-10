@@ -6,7 +6,10 @@ SConscript to build the bootloader
 from util import *
 from config import toolchain, components, debugger
 
-chain = Environment(
+Import('env')
+
+chain = env.Clone()
+chain.Replace(
 	CC = tool('gcc'),
 	LINK = tool('ld'),
 	OBJCOPY = tool('objcopy'),
