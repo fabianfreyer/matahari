@@ -26,3 +26,7 @@ doc/latex
 *.swp
 a.out
 *.img
+*.pyc
+
+#scons
+.sconsign.dblite

@@ -1,0 +1,60 @@
+# vim: set ft=python :
+"""
+SConscript to build the bootloader
+"""
+
+from util import *
+from config import toolchain, components, debugger
+
+Import('env')
+
+chain = env.Clone()
+chain.Replace(
+	CC = tool('gcc'),
+	LINK = tool('ld'),
+	OBJCOPY = tool('objcopy'),
+	OBJDUMP = tool('objdump'),
+	LINKFLAGS = '-melf_i386 -static -nostdlib -nmagic',
+	CPPPATH = 'include',
+	CFLAGS = '-g -Os -m32 -march=i686 -ffreestanding -fno-pic -ffast-math '
+		+'-fomit-frame-pointer -Wall -Werror -DARCH_i386',
+	PROGSUFFIX='',
+	)
+
+# statically build the objects
+objects = chain.StaticObject(
+		Component('mbr', components['mbr']['modules'])
+		+Component('stage2', components['stage2']['modules'])
+		)
+
+# build an elf of the loader
+chain.Depends('loader.elf', 'loader.ld')
+chain.AddPostAction('loader.elf', CheckSectionHeaders)
+chain.Program('loader.elf', objects,
+		# This rather weird hack circumvents the fact that "scons will not
+		# automatically modify its expansion of construction variables like
+		# $TARGET and $SOURCE when using the chdir keyword argument--that is, the
+		# expanded file names will still be relative to the top-level SConstruct
+		# directory, and consequently incorrect relative to the chdir directory"
+		# as stated in the man page.
+		LINKCOM = '$LINK ${[TARGET.rel_path(s) for s in SOURCES]} '
+			+'-o ${TARGET.file} $LINKFLAGS',
+		LINKFLAGS = chain['LINKFLAGS']+' -Tloader.ld',
+		chdir = True)
+
+# separate the mbr and stage2 sections into separate binary files
+chain.Command('mbr.bin', 'loader.elf',
+	'$OBJCOPY -O binary %(sections)s $SOURCES $TARGET' % {
+			'sections': '-j '+(' -j '.join(components['mbr']['sections']))
+		})
+chain.Command('stage2.bin', 'loader.elf',
+	'$OBJCOPY -O binary %(sections)s $SOURCES $TARGET' % {
+			'sections': '-j '+(' -j '.join(components['stage2']['sections']))
+		})
+
+# concatenate the files to generate a disk image
+chain.Command('image.bin', ['mbr.bin', 'stage2.bin'], 'cat $SOURCES > $TARGET')
+
+if debugger and ARGUMENTS.get('debug', 0):
+	chain.AlwaysBuild('image.bin') # make sure the post action is called
+	chain.AddPostAction('image.bin', debugger)
