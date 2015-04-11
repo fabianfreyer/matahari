@@ -30,6 +30,7 @@ Dependencies
 - GNU `coreutils`
 - `wget`
 - `gcc`
+- `SCons`
 
 Debugging
 ---------
