@@ -38,10 +38,10 @@ SECTIONS {
     SHORT(0xAA55);
   }
 
-  . = 0x1000;
+  . = 0x8000;
 
   /* Stage2, loaded by Stage1 */
-  .text_stage2 : AT(0x1000) {
+  .text_stage2 : AT(0x8000) {
     _stage2_load_address = ABSOLUTE(.);
     _text_stage2 = .;
     src/stage2/?*.o(.text.startup);
