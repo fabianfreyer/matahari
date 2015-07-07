@@ -1,6 +1,11 @@
-/*-----------------------------------------------------------------------*/
-/* Low level disk I/O module skeleton for Petit FatFs (C)ChaN, 2014      */
-/*-----------------------------------------------------------------------*/
+/**
+ * \addtogroup bootloader Bootloader
+ * @{
+ * \addtogroup diskio DiskIO
+ * @{
+ * \file diskio.c
+ * \todo Low level disk I/O module skeleton for Petit FatFs (C)ChaN, 2014
+ */
 #include <common/arch.h>
 #include <common/code16.h>
 #include <common/config.h>
@@ -8,69 +13,36 @@
 #include <stage2/diskio.h>
 
 
-/*-----------------------------------------------------------------------*/
-/* Initialize Disk Drive                                                 */
-/*-----------------------------------------------------------------------*/
 
-DSTATUS disk_initialize (void)
-{
-	DSTATUS stat = 0;
+DSTATUS disk_initialize(void) {
+  DSTATUS stat = 0;
+  /// \todo Put your code here
+  return stat;
+}
 
-	// Put your code here
 
-	return stat;
+DRESULT disk_readp(uint8_t* buff, uint32_t sector, uint32_t offset, uint32_t count) {
+  DRESULT res = 0;
+  /// \todo Put your code here
+  return res;
 }
 
 
 
-/*-----------------------------------------------------------------------*/
-/* Read Partial Sector                                                   */
-/*-----------------------------------------------------------------------*/
 
-DRESULT disk_readp (
-	uint8_t* buff,		/* Pointer to the destination object */
-	uint32_t sector,	/* Sector number (LBA) */
-	uint32_t offset,	/* Offset in the sector */
-	uint32_t count		/* Byte count (bit15:destination) */
-)
-{
-	DRESULT res = 0;
+DRESULT disk_writep(const uint8_t* buff, uint32_t sc) {
+  DRESULT res = 0;
 
-	// Put your code here
-
-	return res;
+  if (!buff) {
+    if (sc) {
+      /// \todo Initiate write process
+    } else {
+      /// \todo Finalize write process
+    }
+  } else {
+    /// \todo Send data to the disk
+  }
+  return res;
 }
 
-
-
-/*-----------------------------------------------------------------------*/
-/* Write Partial Sector                                                  */
-/*-----------------------------------------------------------------------*/
-
-DRESULT disk_writep (
-	const uint8_t* buff,		/* Pointer to the data to be written, NULL:Initiate/Finalize write operation */
-	uint32_t sc		/* Sector number (LBA) or Number of bytes to send */
-)
-{
-	DRESULT res = 0;
-
-
-	if (!buff) {
-		if (sc) {
-
-			// Initiate write process
-
-		} else {
-
-			// Finalize write process
-
-		}
-	} else {
-
-		// Send data to the disk
-
-	}
-
-	return res;
-}
-
+/**@}@}*/
