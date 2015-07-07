@@ -1,6 +1,5 @@
 # vim: set ft=python :
 
-from util import *
 
 colors = {}
 colors['cyan']   = '\033[96m'
