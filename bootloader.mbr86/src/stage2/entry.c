@@ -126,6 +126,7 @@ void stage2_entry(uint32_t boot_drive) {
   /*
    * Switch to protected mode, pass the multiboot structure.
    */
+  disable_interrupts();
   enter_pmode((const void*) &stage2_pmode,
     GDT_GLOBAL_CODE_SEGMENT,
     GDT_GLOBAL_DATA_SEGMENT,
