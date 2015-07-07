@@ -28,6 +28,9 @@ chain.Replace(
 	PROGSUFFIX='',
 	)
 
+#generate linker script
+chain.Substfile('loader.ld.in')
+
 # configure headers
 chain.Substfile('include/common/config.h.in')
 chain.Substfile('include/common/pffconf.h.in')
