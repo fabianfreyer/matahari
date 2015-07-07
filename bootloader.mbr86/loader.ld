@@ -1,5 +1,5 @@
 /* Stage1 is the entry point */
-ENTRY(main);
+ENTRY(init);
 
 PHDRS {
   headers PT_PHDR PHDRS ;
@@ -11,6 +11,10 @@ PHDRS {
 
 SECTIONS {
   . = 0x7C00;
+  /* The stack grows downward from underneath the Stage1 load address. */
+  .stack : {
+    _stack_base = ABSOLUTE(.)-4;
+  } :data
   /* Stage1, a boot sector */
   .text_mbr : AT(0x7C00) {
     _text_mbr = .;
@@ -38,10 +42,10 @@ SECTIONS {
     SHORT(0xAA55);
   }
 
-  . = 0x1000;
+  . = 0x8000;
 
   /* Stage2, loaded by Stage1 */
-  .text_stage2 : AT(0x1000) {
+  .text_stage2 : AT(0x8000) {
     _stage2_load_address = ABSOLUTE(.);
     _text_stage2 = .;
     src/stage2/?*.o(.text.startup);
