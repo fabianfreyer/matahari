@@ -11,8 +11,24 @@
 extern void stage2_entry(uint8_t drive);
 
 #ifdef ARCH_x86
-__asm__ ("jmpl  $0, $main\n");
+_longjmp_init;
 #endif
+
+/**
+ * Called before main(), sets up initial environment
+ */
+void __attribute__((noreturn)) init(){
+  extern unsigned long _stack_base;
+  set_ds(0);
+  set_es(0);
+  set_ss(0);
+  stack(&_stack_base);
+  /*
+   * The long jump will set CS for us
+   */
+  _longjmp_main;
+  YOU_SHALL_NOT_PASS;
+}
 
 
 void __attribute__((noreturn)) main(){
