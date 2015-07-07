@@ -10,13 +10,14 @@ PHDRS {
 }
 
 SECTIONS {
-  . = 0x7C00;
+  . = @stage1_stack_top@;
   /* The stack grows downward from underneath the Stage1 load address. */
   .stack : {
     _stack_base = ABSOLUTE(.)-4;
   } :data
+  . = @stage1_load_address@;
   /* Stage1, a boot sector */
-  .text_mbr : AT(0x7C00) {
+  .text_mbr : AT(@stage1_load_address@) {
     _text_mbr = .;
     src/mbr/?*.o (.text.startup);
     src/mbr/?*.o (.text);
@@ -33,19 +34,19 @@ SECTIONS {
     ASSERT((_data_mbr_end - _text_mbr) <= 0x200, "mbr too large");
   } :data
 
-  .partition_table : AT(0x7DBE)
+  .partition_table : AT(@stage1_load_address@+0x1BE)
   {
     src/mbr/partition_table.o(.partition_table);
   }
-  .sig : AT(0x7DFE)
+  .sig : AT(@stage1_load_address@+0x1FE)
   {
     SHORT(0xAA55);
   }
 
-  . = 0x8000;
+  . = @stage2_load_address@;
 
   /* Stage2, loaded by Stage1 */
-  .text_stage2 : AT(0x8000) {
+  .text_stage2 : AT(@stage2_load_address@) {
     _stage2_load_address = ABSOLUTE(.);
     _text_stage2 = .;
     src/stage2/?*.o(.text.startup);

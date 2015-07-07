@@ -4,3 +4,4 @@
 *.bin
 
 include/common/config.h
+loader.ld
