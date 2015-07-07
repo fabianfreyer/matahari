@@ -10,7 +10,6 @@
 #include <stage2/pmode.h>
 #include <stage2/mem.h>
 #include <stage2/debug.h>
-#include <stage2/fat32.h>
 
 int __attribute__((noinline)) get_drive_geom(
     drive_geom *g, unsigned char drive) {
@@ -116,8 +115,6 @@ void stage2_entry(uint32_t boot_drive) {
   puts16(", heads=");
   dumpb(g.heads);
   puts16("}\n\r");
-
-  fat32_init(boot_drive, 0);
 
   // Set up VGA
   //setup_vga(0x3);

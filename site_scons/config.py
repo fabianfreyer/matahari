@@ -10,7 +10,7 @@ components = {
 		'sections': ['.text_mbr', '.data_mbr', '.partition_table', '.sig']
 		},
 	'stage2': {
-		'modules': ['entry', 'gdt', 'pmode', 'video', 'a20', 'mem', 'debug'],
+		'modules': ['entry', 'gdt', 'pmode', 'video', 'a20', 'mem', 'debug', 'fat', 'diskio'],
 		'sections': ['.text_stage2', '.data_stage2']
 		}
 	}
