@@ -3,6 +3,10 @@
 SConscript to build the bootloader
 """
 
+# ugly hack to get relative site_scons here
+import sys
+sys.path.append(Dir('./site_scons').abspath)
+
 from util import *
 from config import toolchain, components, debugger
 
