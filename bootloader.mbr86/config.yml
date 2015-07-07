@@ -1,0 +1,16 @@
+---
+
+modules:
+  mbr:
+  - entry
+  - disk
+  - io
+  - partition_table
+  stage2:
+  - entry
+  - gdt
+  - pmode
+  - video
+  - a20
+  - mem
+  - debug
