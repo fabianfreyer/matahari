@@ -18,25 +18,25 @@
  */
 
 /** Enable pf_read() function */
-#define _USE_READ 1
+#define _USE_READ @stage2_fat_feature_read@
 
 /** Enable pf_opendir() and pf_readdir() function */
-#define _USE_DIR 0
+#define _USE_DIR @stage2_fat_feature_dir@
 
 /** Enable pf_lseek() function */
-#define _USE_LSEEK 0
+#define _USE_LSEEK @stage2_fat_feature_lseek@
 
 /** Enable pf_write() function */
-#define _USE_WRITE 0
+#define _USE_WRITE @stage2_fat_feature_write@
 
 /** Enable FAT12 */
-#define _FS_FAT12 0
+#define _FS_FAT12 @stage2_fat_filesystem_fat12@
 
 /** Enable FAT16 */
-#define _FS_FAT16 1
+#define _FS_FAT16 @stage2_fat_filesystem_fat16@
 
 /** Enable FAT32 */
-#define _FS_FAT32  0
+#define _FS_FAT32  @stage2_fat_filesystem_fat32@
 
 /**@}*/
 
@@ -46,7 +46,7 @@
  */
 
 /** Allow lower case characters for path name */
-#define _USE_LCC 0
+#define _USE_LCC @stage2_fat_namespace_lowercase_paths@
 
 /**
  * The _CODE_PAGE specifies the code page to be used on the target system.
@@ -80,7 +80,7 @@
  *  * 862  - Hebrew (OEM)
  *  * 874  - Thai (OEM, Windows)
  */
-#define _CODE_PAGE 437
+#define _CODE_PAGE @stage2_fat_namespace_codepage@
 
 /**@}*/
 
@@ -111,7 +111,7 @@
  *  PIC24       0           H8S         0           MSP430      0
  *  PIC32       0           H8/300H     0           x86         0/1
  */
-#define _WORD_ACCESS 0
+#define _WORD_ACCESS @stage2_fat_system_wordaccess@
 /**@}*/
 
 #endif /* _PFFCONF */

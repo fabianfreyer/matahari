@@ -30,3 +30,18 @@ stage2:
     c: 0
     h: 0
     s: 2
+  fat:
+    feature:
+      read: true
+      dir: false
+      lseek: false
+      write: false
+    filesystem:
+      fat12: false
+      fat16: true
+      fat32: false
+    namespace:
+      lowercase_paths: false
+      codepage: 437
+    system:
+      word_access: false

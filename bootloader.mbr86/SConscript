@@ -30,6 +30,7 @@ chain.Replace(
 
 # configure headers
 chain.Substfile('include/common/config.h.in')
+chain.Substfile('include/common/pffconf.h.in')
 
 # statically build the objects
 objects = chain.StaticObject(
