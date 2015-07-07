@@ -1,6 +1,7 @@
 from SCons.Script import Split, File
 import subprocess, re
 from config import components, toolchain
+import collections
 
 # move to util
 tool = lambda t: File(('#/%(base)s/%(tuple)s/bin/%(tuple)s-' % toolchain) + t).abspath
@@ -24,4 +25,19 @@ def CheckSectionHeaders(env, target, source):
 	for component in component_sizes:
 		print "  sizeof(%s) = %d" % (component, component_sizes[component])
 
+# Idea shamelessly stolen and extended from
+# http://stackoverflow.com/questions/6027558/flatten-nested-python-dictionaries-compressing-keys#answer-6027615
+def flatten(d, parent_key='', sep='_'):
+    items = []
+    for k, v in d.items():
+        new_key = parent_key + sep + k if parent_key else k
+        if isinstance(v, collections.MutableMapping):
+            items.extend(flatten(v, new_key, sep=sep).items())
+        elif isinstance(v, collections.MutableSequence):
+            items.append((new_key, ', '.join(v)))
+        elif isinstance(v, bool):
+            items.append((new_key, 1 if v else 0))
+        else:
+            items.append((new_key, v))
+    return dict(items)
 

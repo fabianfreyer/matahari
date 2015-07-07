@@ -3,3 +3,4 @@
 *.elf
 *.bin
 
+include/common/config.h

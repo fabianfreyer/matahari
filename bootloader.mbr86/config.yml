@@ -1,0 +1,32 @@
+---
+
+modules:
+  mbr:
+  - entry
+  - disk
+  - io
+  - partition_table
+  stage2:
+  - entry
+  - gdt
+  - pmode
+  - video
+  - a20
+  - mem
+  - debug
+  - diskio
+  - fat
+
+debug: true
+
+stage2:
+  # stage 2 base address.
+  # this is where stage2 will be loaded
+  smap:
+    base: 0x7000
+    length: 0xB00
+  # stage 2 location on disk
+  disk:
+    c: 0
+    h: 0
+    s: 2

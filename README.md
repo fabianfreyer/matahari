@@ -31,6 +31,7 @@ Dependencies
 - `wget`
 - `gcc`
 - `SCons`
+- `PyYAML`
 
 Debugging
 ---------

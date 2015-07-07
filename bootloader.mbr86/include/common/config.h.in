@@ -2,7 +2,9 @@
 #include <common/common.h>
 #include <common/types.h>
 
+#if @debug@
 #define DEBUG
+#endif
 
 /**
  * \defgroup stage2_config Stage2 configuration data
@@ -12,16 +14,16 @@
 /**
  * stage2 base adress. This is where stage2 will be loaded.
  */
-#define SMAP_BASE 0x7000
-#define SMAP_LENGTH 0xB00
+#define SMAP_BASE @stage2_smap_base@
+#define SMAP_LENGTH @stage2_smap_length@
 
 /**
  * CHS Adress of Stage2
  * @{
  */
-#define STAGE2_CYLINDER 0
-#define STAGE2_HEAD 0
-#define STAGE2_SECTOR 2
+#define STAGE2_CYLINDER @stage2_disk_c@
+#define STAGE2_HEAD @stage2_disk_h@
+#define STAGE2_SECTOR @stage2_disk_s@
 /**@}*/
 
 /**@}*/

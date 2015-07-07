@@ -8,11 +8,14 @@ import sys
 sys.path.append(Dir('./site_scons').abspath)
 
 from util import *
-from config import toolchain, components, debugger
+from config import toolchain, components, debugger, configuration
 
 Import('env')
 
-chain = env.Clone()
+chain = env.Clone(tools = ['default', 'textfile'],
+        SUBST_DICT={'@'+k+'@':flatten(configuration)[k] 
+            for k in flatten(configuration)}
+        )
 chain.Replace(
 	CC = tool('gcc'),
 	LINK = tool('ld'),
@@ -24,6 +27,9 @@ chain.Replace(
 		+'-fomit-frame-pointer -Wall -Werror -DARCH_i386',
 	PROGSUFFIX='',
 	)
+
+# configure headers
+chain.Substfile('include/common/config.h.in')
 
 # statically build the objects
 objects = chain.StaticObject(
