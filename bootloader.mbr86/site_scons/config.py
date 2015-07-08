@@ -10,11 +10,11 @@ with open("config.yml", "r") as stream:
 
 components = {
 	'mbr':	{
-		'modules': configuration['modules']['mbr'],
+		'modules': configuration['stage1']['modules'],
 		'sections': ['.text_mbr', '.data_mbr', '.partition_table', '.sig']
 		},
 	'stage2': {
-		'modules': configuration['modules']['stage2'],
+		'modules': configuration['stage2']['modules'],
 		'sections': ['.text_stage2', '.data_stage2']
 		}
 	}
