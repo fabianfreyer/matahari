@@ -1,0 +1,44 @@
+#include <common/partition_table.h>
+
+mbr_t partition_table mbr = {
+#if @partition_1_set@
+  .p1 = {
+    .status = @partition_1_status@,
+    .start = CHS@partition_1_start@,
+    .end = CHS@partition_1_end@,
+    .partition_type = @partition_1_type@,
+    .first_sector = @partition_1_first_sector@,
+    .num_sectors = @partition_1_num_sectors@
+  }
+#endif
+#if @partition_2_set@
+  .p2 = {
+    .status = @partition_2_status@,
+    .start = CHS@partition_2_start@,
+    .end = CHS@partition_2_end@,
+    .partition_type = @partition_2_type@,
+    .first_sector = @partition_2_first_sector@,
+    .num_sectors = @partition_2_num_sectors@
+  }
+#endif
+#if @partition_3_set@
+  .p3 = {
+    .status = @partition_3_status@,
+    .start = CHS@partition_3_start@,
+    .end = CHS@partition_3_end@,
+    .partition_type = @partition_3_type@,
+    .first_sector = @partition_3_first_sector@,
+    .num_sectors = @partition_3_num_sectors@
+  }
+#endif
+#if @partition_4_set@
+  .p4 = {
+    .status = @partition_4_status@,
+    .start = CHS@partition_4_start@,
+    .end = CHS@partition_4_end@,
+    .partition_type = @partition_4_type@,
+    .first_sector = @partition_4_first_sector@,
+    .num_sectors = @partition_4_num_sectors@
+  }
+#endif
+};

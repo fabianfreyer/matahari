@@ -31,6 +31,9 @@ chain.Replace(
 #generate linker script
 chain.Substfile('loader.ld.in')
 
+# generate partition table
+chain.Substfile('src/mbr/partition_table.c.in')
+
 # configure headers
 chain.Substfile('include/common/config.h.in')
 chain.Substfile('include/common/pffconf.h.in')

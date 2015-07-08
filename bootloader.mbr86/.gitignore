@@ -6,3 +6,4 @@
 include/common/config.h
 include/common/pffconf.h
 loader.ld
+src/mbr/partition_table.c

@@ -30,7 +30,7 @@ def CheckSectionHeaders(env, target, source):
 def flatten(d, parent_key='', sep='_'):
     items = []
     for k, v in d.items():
-        new_key = parent_key + sep + k if parent_key else k
+        new_key = str(parent_key) + sep + str(k) if parent_key else k
         if isinstance(v, collections.MutableMapping):
             items.extend(flatten(v, new_key, sep=sep).items())
         elif isinstance(v, collections.MutableSequence):
