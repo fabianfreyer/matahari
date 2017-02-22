@@ -4,19 +4,23 @@ floppy.dmg
 *.sparseimage
 
 #ct-ng
-crosstool-ng-*.tar.bz
-crosstool-ng-*
+/crosstool-ng-*.tar.bz
+/crosstool-ng-*
+/crosstool-ng/
 
 #toolchain
-toolchain/.config.2
-toolchain/build.log
-toolchain/target/
-toolchain/toolchain.sparseimage
-tools/bin/
-tools/crosstool-ng-*.tar.*
-tools/crosstool-ng-*/
-tools/lib/
-tools/share/
+/toolchain/.config.2
+/toolchain/.config.old
+/toolchain/config
+/toolchain/config.gen/
+/toolchain/build.log
+/toolchain/target/
+/toolchain/toolchain.sparseimage
+/tools/bin/
+/tools/crosstool-ng-*.tar.*
+/tools/crosstool-ng-*/
+/tools/lib/
+/tools/share/
 
 #docs
 doc/html

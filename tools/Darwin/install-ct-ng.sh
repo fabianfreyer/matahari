@@ -8,7 +8,7 @@ options() {
 }
 
 #Default parameters
-CT_VERSION=1.19.0
+CT_VERSION=1.22.0
 
 while [ "$1" != "" ]; do
   PARAM=`echo $1 | awk -F= '{print $1}'`
@@ -41,7 +41,7 @@ wget -N http://crosstool-ng.org/download/crosstool-ng/crosstool-ng-${CT_VERSION}
 
 echo "Unpacking ct-ng..."
 tar xjf crosstool-ng-${CT_VERSION}.tar.bz2
-cd crosstool-ng-${CT_VERSION}
+cd crosstool-ng
 
 echo "Checking for GNU tools"
 require() {
