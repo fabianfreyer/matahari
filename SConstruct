@@ -17,12 +17,15 @@ compile_shared_source_message = '%sCompiling shared %s==> %s$SOURCE%s' % \
 link_program_message = '%sLinking %s==> %s$TARGET%s' % \
    (colors['red'], colors['purple'], colors['yellow'], colors['end'])
 
-env = Environment(
-	CXXCOMSTR = compile_source_message,
-	CCCOMSTR = compile_source_message,
-	SHCCCOMSTR = compile_shared_source_message,
-	SHCXXCOMSTR = compile_shared_source_message,
-	LINKCOMSTR = link_program_message
-)
+if ARGUMENTS.get('VERBOSE') != "1":
+    env = Environment(
+        CXXCOMSTR = compile_source_message,
+        CCCOMSTR = compile_source_message,
+        SHCCCOMSTR = compile_shared_source_message,
+        SHCXXCOMSTR = compile_shared_source_message,
+        LINKCOMSTR = link_program_message
+    )
+else:
+    env = Environment()
 
 SConscript(dirs=['bootloader.mbr86'], exports='env')

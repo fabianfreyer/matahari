@@ -53,8 +53,8 @@ chain.Program('loader.elf', objects,
 		# expanded file names will still be relative to the top-level SConstruct
 		# directory, and consequently incorrect relative to the chdir directory"
 		# as stated in the man page.
-		LINKCOM = '$LINK ${[TARGET.rel_path(s) for s in SOURCES]} '
-			+'-o ${TARGET.file} $LINKFLAGS',
+		LOBJS=[Dir(".").rel_path(o) for o in objects],
+		LINKCOM = '$LINK $LOBJS -o ${TARGET.file} $LINKFLAGS',
 		LINKFLAGS = chain['LINKFLAGS']+' -Tloader.ld',
 		chdir = True)
 
